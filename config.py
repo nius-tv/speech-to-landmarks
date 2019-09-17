@@ -6,3 +6,4 @@ MOUTH_LMS_FILE_PATH = '/data//mouth-landmarks.json'
 OFFSET_END = 0.1
 PERCENTAGE_CLIP = 3
 SILENT_IPA_CODE = 'P'
+TEXT_FILE_PATH = '/tmp/transcript.txt'
