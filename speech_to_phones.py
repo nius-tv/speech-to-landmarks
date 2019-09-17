@@ -1,3 +1,4 @@
+import json
 import math
 import requests
 
@@ -7,6 +8,10 @@ from config import *
 class MouthLandmarksGenerator(object):
 
     def __init__(self):
+        self.mouth_lms_points = self._get_mouth_lms_points()
+        # All mouth landmarks have the same number of points.
+        # Here we can use the default ipa code to obtain the number of mouth points.
+        self.num_mouth_points = len(self.mouth_lms_points[self.DEFAULT_MOUTH_IPA_CODE])
 
     def _add_silent_lms(self, mouth_lms):
         old_mouth_end = 0
@@ -62,6 +67,11 @@ class MouthLandmarksGenerator(object):
         res = requests.post(self.FORCED_ALIGNER_URL, files=files)
         return res.json()
 
+    def _get_mouth_lms_points(self):
+        with open(self.MOUTH_LMS_FILE_PATH) as f:
+            data = f.read()
+        return json.loads(data)
+
     def _interpolate_mouth_lms(self, mouth_lms):
         int_mouth_lms = []
         num = len(mouth_lms)
@@ -112,3 +122,16 @@ class MouthLandmarksGenerator(object):
 
         return int_mouth_lms
 
+    def _save_text(self, text):
+        with open(TEXT_FILE_PATH, 'w') as f:
+            f.write(text)
+
+    def generate(self, audio_file_path, text):
+        self._save_text(text)
+        forced_aligner_data = self._execute_forced_aligner(audio_file_path,
+                                                           TEXT_FILE_PATH)
+        print('forced aligner data:\n', json.dumps(forced_aligner_data, indent=True))
+
+        mouth_lms = self._compute_mouth_lms(forced_aligner_data)
+        mouth_lms = self._add_silent_lms(mouth_lms)
+        return self._interpolate_mouth_lms(mouth_lms)
