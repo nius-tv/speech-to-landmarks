@@ -5,7 +5,7 @@ import requests
 from config import *
 
 
-class SpeechToLandmarks(object):
+class MouthLandmarksGenerator(object):
 
     def __init__(self):
         self.mouth_lms_points = self._get_mouth_lms_points()
