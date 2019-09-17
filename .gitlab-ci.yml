@@ -1,0 +1,23 @@
+variables:
+  IMAGE: $IMG_REGISTRY_URL/$CI_PROJECT_NAME
+
+stages:
+  - build
+
+build image:
+  stage: build
+  image: $CI_RUNNER_IMG
+  services:
+    - docker:dind
+  script:
+    # Init Google Cloud SDK
+    - echo "$GCP_SERVICE_ACCOUNT" >> "$HOME/gcp-service-account.json"
+    - gcloud auth activate-service-account --key-file $HOME/gcp-service-account.json
+    # Setup docker with Google Cloud SDK
+    - gcloud auth configure-docker
+    # Build and push images
+    - echo $IMAGE
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
+  only:
+    - master
