@@ -47,7 +47,7 @@ class SpeechToLandmarks(object):
             for phone in word['phones']:
                 # Extract IPA code
                 phone_name = phone['phone']
-                ipa_code = phone_name.split('_')[0].upper() # TODO
+                ipa_code = phone_name.split('_')[0].upper() # phone name example: "ow_E"
                 # Compute start and end
                 mouth_end += phone['duration']
                 mouth_lms.append({
