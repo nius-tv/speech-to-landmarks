@@ -5,7 +5,7 @@ import requests
 from config import *
 
 
-class MouthLandmarksGenerator(object):
+class SpeechToLandmarks(object):
 
     def __init__(self):
         self.mouth_lms_points = self._get_mouth_lms_points()
@@ -47,7 +47,7 @@ class MouthLandmarksGenerator(object):
             for phone in word['phones']:
                 # Extract IPA code
                 phone_name = phone['phone']
-                ipa_code = phone_name.split('_')[0].upper()
+                ipa_code = phone_name.split('_')[0].upper() # TODO
                 # Compute start and end
                 mouth_end += phone['duration']
                 mouth_lms.append({
@@ -126,7 +126,7 @@ class MouthLandmarksGenerator(object):
         with open(TEXT_FILE_PATH, 'w') as f:
             f.write(text)
 
-    def generate(self, audio_file_path, text):
+    def convert(self, audio_file_path, text):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            TEXT_FILE_PATH)
