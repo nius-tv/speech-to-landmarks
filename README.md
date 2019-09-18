@@ -1,3 +1,7 @@
+docker build \
+	-t speech-to-landmarks \
+	.
+
 docker run \
 	-v $(pwd):/app \
 	-v $(pwd)/data:/data \
