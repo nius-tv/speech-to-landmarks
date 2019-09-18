@@ -93,10 +93,9 @@ class MouthLandmarksGenerator(object):
                                   next_ipa_code):
         for i in range(start_frame, end_frame):
             percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
-            print('percentage:', percentage)
             if percentage < MIN_PERCENTAGE:
                 percentage /= PERCENTAGE_CLIP
-            print('percentage2:', percentage)
+
             mouth_points = []
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
