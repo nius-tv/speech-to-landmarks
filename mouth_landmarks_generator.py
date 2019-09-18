@@ -11,7 +11,7 @@ class MouthLandmarksGenerator(object):
         self.mouth_lms_points = self._get_mouth_lms_points()
         # All mouth landmarks have the same number of points.
         # Here we can use the default ipa code to obtain the number of mouth points.
-        self.num_mouth_points = len(self.mouth_lms_points[self.DEFAULT_MOUTH_IPA_CODE])
+        self.num_mouth_points = len(self.mouth_lms_points[DEFAULT_MOUTH_IPA_CODE])
 
     def _add_silent_lms(self, mouth_lms):
         old_mouth_end = 0
@@ -23,7 +23,7 @@ class MouthLandmarksGenerator(object):
             # If there is a gap, then add "silent" IPA.
             if mouth_start - old_mouth_end > 0:
                 new_mouth_lms.append({
-                    'ipa_code': self.SILENT_IPA_CODE,
+                    'ipa_code': SILENT_IPA_CODE,
                     'start': old_mouth_end,
                     'end': mouth_start
                 })
@@ -32,9 +32,9 @@ class MouthLandmarksGenerator(object):
 
         # Add ending mouth position
         new_mouth_lms.append({
-            'ipa_code': self.SILENT_IPA_CODE,
+            'ipa_code': SILENT_IPA_CODE,
             'start': old_mouth_end,
-            'end': old_mouth_end + self.OFFSET_END
+            'end': old_mouth_end + OFFSET_END
         })
 
         return new_mouth_lms
@@ -64,11 +64,11 @@ class MouthLandmarksGenerator(object):
             'audio': open(audio_file_path, 'rb'),
             'transcript': open(text_file_path, 'rb')
         }
-        res = requests.post(self.FORCED_ALIGNER_URL, files=files)
+        res = requests.post(FORCED_ALIGNER_URL, files=files)
         return res.json()
 
     def _get_mouth_lms_points(self):
-        with open(self.MOUTH_LMS_FILE_PATH) as f:
+        with open(MOUTH_LMS_FILE_PATH) as f:
             data = f.read()
         return json.loads(data)
 
@@ -94,8 +94,8 @@ class MouthLandmarksGenerator(object):
         for i in range(start_frame, end_frame):
             percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
             print('percentage:', percentage)
-            if percentage < self.MIN_PERCENTAGE:
-                percentage /= self.PERCENTAGE_CLIP
+            if percentage < MIN_PERCENTAGE:
+                percentage /= PERCENTAGE_CLIP
             print('percentage2:', percentage)
             mouth_points = []
             for a in range(self.num_mouth_points):
