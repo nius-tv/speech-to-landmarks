@@ -42,6 +42,8 @@ class MouthLandmarksGenerator(object):
     def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
         for word in forced_aligner_data['words']:
+            if word['case'] == 'not-found-in-audio':
+                raise
             mouth_start = word['start']
             mouth_end = mouth_start
             for phone in word['phones']:
