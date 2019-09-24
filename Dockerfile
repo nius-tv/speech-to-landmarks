@@ -10,5 +10,6 @@ RUN apt-get install -y python3-pip
 
 RUN pip3 install opencv-python==3.4.0.12
 RUN pip3 install requests==2.22.0
+RUN pip3 install scipy==1.3.1
 
 ADD . /app
