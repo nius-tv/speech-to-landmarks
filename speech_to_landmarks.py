@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from config import IMG_FMT, ORIGINAL_VIDEO_RESOLUTION
+from config import *
 from mouth_landmarks_generator import MouthLandmarksGenerator
 
 
@@ -19,15 +19,14 @@ def landmarks_to_image(landmarks, output_file):
 
 
 if __name__ == '__main__':
-	audio_file_path = '/data/audio.wav'
 	text = 'wave glow is awesome'
 
 	print('Computing mouth landmarks from audio and text')
-	mouth_lms = MouthLandmarksGenerator().generate(audio_file_path, text)
+	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
 
 	print('Generating images from mouth landmarks')
 	num = len(mouth_lms)
 	for i, lm in enumerate(mouth_lms):
-		output_file_path = '/data/mouth-landmarks/{:010d}.{}'.format(i + 1, IMG_FMT)
+		output_file_path = '{}/{:010d}.{}'.format(MOUTH_LMS_IMAGES_DIR_PATH, i + 1, IMG_FMT)
 		print(i + 1, '/', num, output_file_path)
 		landmarks_to_image(lm, output_file_path)
