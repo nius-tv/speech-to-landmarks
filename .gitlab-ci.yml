@@ -15,7 +15,7 @@ build image:
     - gcloud auth activate-service-account --key-file $HOME/gcp-service-account.json
     # Setup docker with Google Cloud SDK
     - gcloud auth configure-docker
-    # Build and push images
+    # Build and push image
     - echo $IMAGE
     - docker build -t $IMAGE .
     - docker push $IMAGE
