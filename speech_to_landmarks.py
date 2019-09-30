@@ -19,10 +19,8 @@ def landmarks_to_image(landmarks, output_file):
 
 
 if __name__ == '__main__':
-	text = 'wave glow is awesome'
-
 	print('Computing mouth landmarks from audio and text')
-	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
+	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, INPUT_TEXT)
 
 	print('Generating images from mouth landmarks')
 	num = len(mouth_lms)

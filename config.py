@@ -3,6 +3,7 @@ DEFAULT_MOUTH_IPA_CODE = 'AA'
 FORCED_ALIGNER_URL = 'http://gentle:8765/transcriptions?async=false'
 FPS = 30
 IMG_FMT = 'png'
+INPUT_TEXT = 'wave glow is awesome'
 MIN_PERCENTAGE = 0.7
 MOUTH_LMS_FILE_PATH = '/data/mouth-landmarks.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
