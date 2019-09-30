@@ -10,7 +10,7 @@ def landmarks_to_image(landmarks, output_file):
 	image = np.zeros(shape, np.uint8)
 
 	color = (255, 255, 255) # white
-	for x, y in lm['mouth_points']:
+	for x, y in landmarks['mouth_points']:
 		# 3 = radius
 		# -1 = thinkness, when value is set to -1, the circle will be filled with color
 		cv2.circle(image, (int(x), int(y)), 3, color, -1)
