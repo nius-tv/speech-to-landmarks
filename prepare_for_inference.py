@@ -19,4 +19,4 @@ if __name__ == '__main__':
         # Save image
         filename = image_path.split('/')[-1]
         output_file = '{}/{}'.format(MOUTH_LMS_INFERENCE_DIR_PATH, filename)
-        cv2.imwrite(output_file, image)
+        assert cv2.imwrite(output_file, image)

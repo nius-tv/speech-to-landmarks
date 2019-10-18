@@ -21,7 +21,7 @@ def landmarks_to_image(landmarks, output_file):
 		# -1 = thinkness, when value is set to -1, the circle will be filled with color
 		cv2.circle(image, (int(x), int(y)), 3, color, -1)
 
-	cv2.imwrite(output_file, image)
+	assert cv2.imwrite(output_file, image)
 
 
 if __name__ == '__main__':
