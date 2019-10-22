@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import yaml
 
 from config import *
 from mouth_landmarks_generator import MouthLandmarksGenerator
@@ -18,10 +19,17 @@ def landmarks_to_image(landmarks, output_file):
 	assert cv2.imwrite(output_file, image)
 
 
+def load_story():
+    with open(STORY_FILE_PATH) as f:
+        data = f.read()
+    return yaml.load(data, Loader=yaml.FullLoader)
+
+
 if __name__ == '__main__':
+	text = load_story()['text']
+
 	print('Computing mouth landmarks from audio and text')
-	input_text = get_text()
-	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, input_text)
+	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
 
 	print('Generating images from mouth landmarks')
 	num = len(mouth_lms)
