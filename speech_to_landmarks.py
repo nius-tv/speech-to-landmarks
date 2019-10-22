@@ -4,10 +4,14 @@ import numpy as np
 import yaml
 
 from config import *
+from joblib import Parallel, delayed
 from mouth_landmarks_generator import MouthLandmarksGenerator
 
 
-def landmarks_to_image(landmarks, output_file):
+def landmarks_to_image(num, i, landmarks):
+	output_file_path = '{}/{:010d}.{}'.format(MOUTH_LMS_IMAGES_DIR_PATH, i + 1, IMG_FMT)
+	print(i + 1, '/', num, output_file_path)
+
 	shape = (ORIGINAL_VIDEO_RESOLUTION[1], ORIGINAL_VIDEO_RESOLUTION[0]) # columns, rows
 	image = np.zeros(shape, np.uint8)
 
@@ -17,7 +21,7 @@ def landmarks_to_image(landmarks, output_file):
 		# -1 = thinkness, when value is set to -1, the circle will be filled with color
 		cv2.circle(image, (int(x), int(y)), 3, color, -1)
 
-	assert cv2.imwrite(output_file, image)
+	assert cv2.imwrite(output_file_path, image)
 
 
 def load_story():
@@ -43,7 +47,8 @@ if __name__ == '__main__':
 
 	print('Generating images from mouth landmarks')
 	num = len(mouth_lms)
-	for i, lm in enumerate(mouth_lms):
-		output_file_path = '{}/{:010d}.{}'.format(MOUTH_LMS_IMAGES_DIR_PATH, i + 1, IMG_FMT)
-		print(i + 1, '/', num, output_file_path)
-		landmarks_to_image(lm, output_file_path)
+
+	Parallel(n_jobs=NUM_JOBS)(
+		delayed(landmarks_to_image)(num, i, lm)
+		for i, lm in enumerate(mouth_lms)
+	)

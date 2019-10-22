@@ -8,6 +8,7 @@ RUN apt-get install -y libxrender-dev # required by opencv
 RUN apt-get install -y python3.5
 RUN apt-get install -y python3-pip
 
+RUN pip3 install joblib==0.14.0
 RUN pip3 install opencv-python==3.4.0.12
 RUN pip3 install requests==2.22.0
 RUN pip3 install scipy==1.3.1
