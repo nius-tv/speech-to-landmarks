@@ -1,4 +1,3 @@
-import json
 import math
 import requests
 
@@ -7,6 +6,7 @@ from config import *
 
 class MouthLandmarksGenerator(object):
 
+    NOT_FOUND_IN_AUDIO = 'not-found-in-audio'
     OUT_OF_VOCABULARY = 'OOV'
 
     def __init__(self):
@@ -43,10 +43,26 @@ class MouthLandmarksGenerator(object):
 
     def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
+        mouth_end = 0
+        not_found = False
+
         for word in forced_aligner_data['words']:
-            if word['case'] == 'not-found-in-audio':
-                print(word)                
-                raise
+            if word['case'] == NOT_FOUND_IN_AUDIO and not not_found:
+                print('not-found-in-audio:', word['word'])
+                mouth_start = mouth_end
+                not_found = True
+                continue
+            elif word['case'] == NOT_FOUND_IN_AUDIO and not_found:
+                print('not-found-in-audio:', word['word'])
+                continue
+            elif not_found:
+                mouth_lms.append({
+                    'ipa_code': NOT_FOUND_IN_AUDIO,
+                    'start': mouth_start,
+                    'end': word['start']
+                })
+                not_found = False
+
             mouth_start = word['start']
             mouth_end = mouth_start
             for phone in word['phones']:
@@ -108,20 +124,20 @@ class MouthLandmarksGenerator(object):
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
                 if ipa_code not in self.mouth_lms_points \
-                    and not ipa_code == self.OUT_OF_VOCABULARY:
+                    and not ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     print('ipa_code:', ipa_code)
                     raise
-                elif ipa_code == self.OUT_OF_VOCABULARY:
+                elif ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     ipa_code = DEFAULT_MOUTH_IPA_CODE
                     oov_frames.append(i)
 
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
                 if next_ipa_code not in self.mouth_lms_points \
-                    and not next_ipa_code == self.OUT_OF_VOCABULARY:
+                    and not next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     print('next_ipa_code:', next_ipa_code)
                     raise
-                elif next_ipa_code == self.OUT_OF_VOCABULARY:
+                elif next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     next_ipa_code = DEFAULT_MOUTH_IPA_CODE
                     oov_frames.append(i)
 
