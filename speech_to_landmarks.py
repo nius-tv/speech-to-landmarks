@@ -1,4 +1,5 @@
 import cv2
+import json
 import numpy as np
 import yaml
 
@@ -25,11 +26,20 @@ def load_story():
     return yaml.load(data, Loader=yaml.FullLoader)
 
 
+def save_oov(data):
+	data = json.dumps(data)
+    with open(OUT_OF_VOCABULARY_FILE_PATH, 'w') as f:
+        data = f.write(data)
+
+
 if __name__ == '__main__':
 	text = load_story()['text']
 
 	print('Computing mouth landmarks from audio and text')
-	mouth_lms = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
+	mouth_lms, oov_frames = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
+
+	print('Saving out-of-vocabulary frames')
+	save_oov(oov_frames)
 
 	print('Generating images from mouth landmarks')
 	num = len(mouth_lms)
