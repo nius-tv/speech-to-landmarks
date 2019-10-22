@@ -16,5 +16,6 @@ PERCENTAGE_CLIP = 3
 ROTATION_ANGLE = 90
 SCALED_VIDEO_RESOLUTION = (512, 1024) # width, height
 SILENT_IPA_CODE = 'P'
+STORY_FILE_PATH = '/data/story.yaml'
 STORY_ID = os.environ.get('STORY_ID')
 TEXT_FILE_PATH = '/tmp/transcript.txt'
