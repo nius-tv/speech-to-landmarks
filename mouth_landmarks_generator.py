@@ -96,7 +96,7 @@ class MouthLandmarksGenerator(object):
 
     def _interpolate_mouth_lms(self, mouth_lms):
         int_mouth_lms = []
-        oov_frames = []
+        oov_frames = {}
         num = len(mouth_lms)
 
         for i, mouth_lm in enumerate(mouth_lms):
@@ -130,7 +130,7 @@ class MouthLandmarksGenerator(object):
                     raise
                 elif ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     ipa_code = DEFAULT_MOUTH_IPA_CODE
-                    oov_frames.append(i)
+                    oov_frames[start_frame] = end_frame
 
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
@@ -140,7 +140,7 @@ class MouthLandmarksGenerator(object):
                     raise
                 elif next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
                     next_ipa_code = DEFAULT_MOUTH_IPA_CODE
-                    oov_frames.append(i)
+                    oov_frames[start_frame] = end_frame
 
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
