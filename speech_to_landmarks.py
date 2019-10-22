@@ -21,15 +21,15 @@ def landmarks_to_image(landmarks, output_file):
 
 
 def load_story():
-    with open(STORY_FILE_PATH) as f:
-        data = f.read()
-    return yaml.load(data, Loader=yaml.FullLoader)
+	with open(STORY_FILE_PATH) as f:
+		data = f.read()
+	return yaml.load(data, Loader=yaml.FullLoader)
 
 
 def save_oov(data):
 	data = json.dumps(data)
-    with open(OUT_OF_VOCABULARY_FILE_PATH, 'w') as f:
-        data = f.write(data)
+	with open(OUT_OF_VOCABULARY_FILE_PATH, 'w') as f:
+		f.write(data)
 
 
 if __name__ == '__main__':
