@@ -107,7 +107,7 @@ class MouthLandmarksGenerator(object):
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
                 if next_ipa_code not in self.mouth_lms_points:
-                    print('ipa_code:', ipa_code)
+                    print('ipa_code:', next_ipa_code)
                     raise
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
