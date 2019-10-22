@@ -1,14 +1,8 @@
 import cv2
 import numpy as np
-import redis
 
 from config import *
 from mouth_landmarks_generator import MouthLandmarksGenerator
-
-
-def get_text():
-    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
-    return r.get(STORY_ID).decode('utf-8') # binary to utf-8 string
 
 
 def landmarks_to_image(landmarks, output_file):
