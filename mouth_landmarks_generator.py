@@ -7,6 +7,8 @@ from config import *
 
 class MouthLandmarksGenerator(object):
 
+    OUT_OF_VOCABULARY = 'OOV'
+
     def __init__(self):
         self.mouth_lms_points = self._get_mouth_lms_points()
         # All mouth landmarks have the same number of points.
@@ -76,7 +78,9 @@ class MouthLandmarksGenerator(object):
 
     def _interpolate_mouth_lms(self, mouth_lms):
         int_mouth_lms = []
+        oov_frames = []
         num = len(mouth_lms)
+
         for i, mouth_lm in enumerate(mouth_lms):
             ipa_code = mouth_lm['ipa_code']
             # Select next mouth landmarks
@@ -86,13 +90,14 @@ class MouthLandmarksGenerator(object):
             # Calculate interpolated mouth points
             start_frame = math.floor(mouth_lm['start'] * FPS)
             end_frame = math.floor(mouth_lm['end'] * FPS)
-            int_mouth_lms = self._interpolate_mouth_points(int_mouth_lms, start_frame, end_frame,
-                                                           ipa_code, next_ipa_code)
+            int_mouth_lms, oov_frames = self._interpolate_mouth_points(int_mouth_lms, oov_frames,
+                                                                       start_frame, end_frame,
+                                                                       ipa_code, next_ipa_code)
 
-        return int_mouth_lms
+        return int_mouth_lms, oov_frames
 
-    def _interpolate_mouth_points(self, int_mouth_lms, start_frame, end_frame, ipa_code,
-                                  next_ipa_code):
+    def _interpolate_mouth_points(self, int_mouth_lms, oov_frames, start_frame, end_frame,
+                                  ipa_code, next_ipa_code):
         for i in range(start_frame, end_frame):
             percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
             if percentage < MIN_PERCENTAGE:
@@ -101,14 +106,24 @@ class MouthLandmarksGenerator(object):
             mouth_points = []
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
-                if ipa_code not in self.mouth_lms_points:
+                if ipa_code not in self.mouth_lms_points \
+                    and not ipa_code == self.OUT_OF_VOCABULARY:
                     print('ipa_code:', ipa_code)
                     raise
+                elif ipa_code == self.OUT_OF_VOCABULARY:
+                    ipa_code = DEFAULT_MOUTH_IPA_CODE
+                    oov_frames.append(i)
+
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
-                if next_ipa_code not in self.mouth_lms_points:
-                    print('ipa_code:', next_ipa_code)
+                if next_ipa_code not in self.mouth_lms_points \
+                    and not next_ipa_code == self.OUT_OF_VOCABULARY:
+                    print('next_ipa_code:', next_ipa_code)
                     raise
+                elif next_ipa_code == self.OUT_OF_VOCABULARY:
+                    next_ipa_code = DEFAULT_MOUTH_IPA_CODE
+                    oov_frames.append(i)
+
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
                 int_x = x + ((target_x - x) * percentage)
@@ -121,7 +136,7 @@ class MouthLandmarksGenerator(object):
                 'mouth_points': mouth_points
             })
 
-        return int_mouth_lms
+        return int_mouth_lms, oov_frames
 
     def _save_text(self, text):
         with open(TEXT_FILE_PATH, 'w') as f:
