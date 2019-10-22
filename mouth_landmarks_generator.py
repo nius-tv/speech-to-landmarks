@@ -48,17 +48,17 @@ class MouthLandmarksGenerator(object):
         not_found = False
 
         for word in forced_aligner_data['words']:
-            if word['case'] == NOT_FOUND_IN_AUDIO and not not_found:
+            if word['case'] == self.NOT_FOUND_IN_AUDIO and not not_found:
                 print('not-found-in-audio:', word['word'])
                 mouth_start = mouth_end
                 not_found = True
                 continue
-            elif word['case'] == NOT_FOUND_IN_AUDIO and not_found:
+            elif word['case'] == self.NOT_FOUND_IN_AUDIO and not_found:
                 print('not-found-in-audio:', word['word'])
                 continue
             elif not_found:
                 mouth_lms.append({
-                    'ipa_code': NOT_FOUND_IN_AUDIO,
+                    'ipa_code': self.NOT_FOUND_IN_AUDIO,
                     'start': mouth_start,
                     'end': word['start']
                 })
