@@ -12,6 +12,7 @@ MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
 MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'
 OFFSET_END = 0.1
 ORIGINAL_VIDEO_RESOLUTION = (1080, 1920) # width, height
+OUT_OF_VOCABULARY_FILE_PATH = '/data/out-of-vocabulary-frames.json'
 PERCENTAGE_CLIP = 3
 ROTATION_ANGLE = 90
 SCALED_VIDEO_RESOLUTION = (512, 1024) # width, height
