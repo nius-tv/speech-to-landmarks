@@ -1,5 +1,3 @@
-import os
-
 AUDIO_FMT = 'wav'
 AUDIO_FILE_PATH = '/data/audio.{}'.format(AUDIO_FMT)
 DEFAULT_MOUTH_IPA_CODE = 'AA'
