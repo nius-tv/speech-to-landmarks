@@ -1,29 +1,17 @@
-import cv2
-import glob
+import subprocess
 
 from config import *
-from joblib import Parallel, delayed
-from scipy import ndimage
-
-
-def process_images(i, image_path):
-    print(i + 1, image_path)
-    image = cv2.imread(image_path)
-    # Resize image
-    image = cv2.resize(image, SCALED_VIDEO_RESOLUTION, interpolation=cv2.INTER_CUBIC)
-    # Rotate image
-    image = ndimage.rotate(image, ROTATION_ANGLE)
-    # Save image
-    filename = image_path.split('/')[-1]
-    output_file = '{}/{}'.format(MOUTH_LMS_INFERENCE_DIR_PATH, filename)
-    assert cv2.imwrite(output_file, image)
 
 
 if __name__ == '__main__':
-    images_dir = '{}/*'.format(MOUTH_LMS_IMAGES_DIR_PATH)
-    files = glob.iglob(images_dir)
-
-    Parallel(n_jobs=NUM_JOBS)(
-        delayed(process_images)(i, image_path)
-        for i, image_path in enumerate(files)
-    )
+    cmd = 'ffmpeg \
+        -y \
+        -i {input_dir_path}/%010d.{img_fmt} \
+        -vf scale={width}:{height},transpose=2 \
+        {output_dir_path}/%010d.{img_fmt}'.format(
+            input_dir_path=MOUTH_LMS_IMAGES_DIR_PATH,
+            img_fmt=IMG_FMT,
+            width=SCALED_VIDEO_RESOLUTION[0],
+            height=SCALED_VIDEO_RESOLUTION[1],
+            output_dir_path=MOUTH_LMS_INFERENCE_DIR_PATH)
+    subprocess.call(['bash', '-c', cmd])
