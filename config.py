@@ -11,7 +11,6 @@ MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'
 NUM_JOBS = 10
 OFFSET_END = 0.1
 ORIGINAL_VIDEO_RESOLUTION = (1080, 1920) # width, height
-OUT_OF_VOCABULARY_FILE_PATH = '/data/out-of-vocabulary-frames.json'
 PERCENTAGE_CLIP = 3
 SCALED_VIDEO_RESOLUTION = (512, 1024) # width, height
 SILENT_IPA_CODE = 'P'
