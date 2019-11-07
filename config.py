@@ -4,8 +4,8 @@ AUDIO_FMT = os.environ.get('AUDIO_FMT')
 AUDIO_FILE_PATH = '/data/audio.{}'.format(AUDIO_FMT)
 DEFAULT_MOUTH_IPA_CODE = 'AA'
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
-FPS = 30
 IMG_FMT = 'png'
+FPS = float(os.environ.get('FPS'))
 MIN_PERCENTAGE = 0.7
 MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
