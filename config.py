@@ -1,4 +1,6 @@
-AUDIO_FMT = 'wav'
+import os
+
+AUDIO_FMT = os.environ.get('AUDIO_FMT')
 AUDIO_FILE_PATH = '/data/audio.{}'.format(AUDIO_FMT)
 DEFAULT_MOUTH_IPA_CODE = 'AA'
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
