@@ -6,7 +6,7 @@ DEFAULT_MOUTH_IPA_CODE = 'AA'
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
 FPS = float(os.environ.get('FPS'))
 IMG_FMT = os.environ.get('IMG_FMT')
-MIN_PERCENTAGE = 0.7
+MIN_PERCENTAGE = 0
 MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
 MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'
