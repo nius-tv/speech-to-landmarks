@@ -1,5 +1,6 @@
 import json
 import math
+import random
 import requests
 
 from config import *
@@ -16,28 +17,37 @@ class MouthLandmarksGenerator(object):
         # Here we can use the default ipa code to obtain the number of mouth points.
         self.num_mouth_points = len(self.mouth_lms_points[DEFAULT_MOUTH_IPA_CODE])
 
-    def _add_silent_lms(self, mouth_lms):
-        old_mouth_end = 0
+    def _adjust_lms(self, mouth_lms):
+        old_mouth = None
         new_mouth_lms = []
 
-        for mouth_lm in mouth_lms:
+        for i, mouth_lm in enumerate(mouth_lms):
             mouth_start = mouth_lm['start']
             # Checks if there is a "gap"/"silence" between mouths landmarks.
-            # If there is a gap, then add "silent" IPA.
-            if mouth_start - old_mouth_end > 0:
+            if i == 0 and mouth_start > 0:
                 new_mouth_lms.append({
                     'ipa_code': SILENT_IPA_CODE,
-                    'start': old_mouth_end,
+                    'start': 0,
                     'end': mouth_start
                 })
-            old_mouth_end = mouth_lm['end']
+            if i != 0 and mouth_start - old_mouth['end'] > 0:
+                old_mouth['end'] = mouth_start
+
             new_mouth_lms.append(mouth_lm)
+            old_mouth = mouth_lm
+
+        # Delay last mouth landmark
+        mouth_lm['end'] += END_MOUTH_DURATION
 
         # Add ending mouth position
+        offset = random.uniform(MIN_OFFSET_END, MAX_OFFSET_END)
         new_mouth_lms.append({
             'ipa_code': SILENT_IPA_CODE,
-            'start': old_mouth_end,
-            'end': old_mouth_end + OFFSET_END
+            'start': mouth_lm['end'],
+            'end': mouth_lm['end'] + offset
+        })
+        new_mouth_lms.append({
+            'ipa_code': SILENT_IPA_CODE
         })
 
         return new_mouth_lms
@@ -167,5 +177,5 @@ class MouthLandmarksGenerator(object):
         print('forced aligner data:\n', json.dumps(forced_aligner_data, indent=True))
 
         mouth_lms = self._compute_mouth_lms(forced_aligner_data)
-        mouth_lms = self._add_silent_lms(mouth_lms)
+        mouth_lms = self._adjust_lms(mouth_lms)
         return self._interpolate_mouth_lms(mouth_lms)
