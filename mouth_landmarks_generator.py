@@ -52,6 +52,19 @@ class MouthLandmarksGenerator(object):
 
         return new_mouth_lms
 
+    def _check_mouth_lms(self, mouth_lms):
+        num = len(mouth_lms)
+
+        for i, mouth_lm in enumerate(mouth_lms):
+            if i + 1 == num:
+                break
+            # Fixes issue with Gentle's output
+            if i > 0 and old_mouth['end'] > mouth_lm['start']:
+                old_mouth['end'] = mouth_lm['start']
+            old_mouth = mouth_lm
+
+        return mouth_lms
+
     def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
         mouth_end = 0
@@ -178,4 +191,5 @@ class MouthLandmarksGenerator(object):
 
         mouth_lms = self._compute_mouth_lms(forced_aligner_data)
         mouth_lms = self._adjust_lms(mouth_lms)
+        mouth_lms = self._check_mouth_lms(mouth_lms)
         return self._interpolate_mouth_lms(mouth_lms)
