@@ -7,8 +7,8 @@ END_MOUTH_DURATION = 0.4
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
 FPS = float(os.environ.get('FPS'))
 IMG_FMT = os.environ.get('IMG_FMT')
-MAX_OFFSET_END = 0.4
-MIN_OFFSET_END = 0.1
+MAX_OFFSET_END = 0.3
+MIN_OFFSET_END = 0.2
 MIN_PERCENTAGE = 0.3
 MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
