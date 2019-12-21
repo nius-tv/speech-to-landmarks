@@ -192,4 +192,5 @@ class MouthLandmarksGenerator(object):
         mouth_lms = self._compute_mouth_lms(forced_aligner_data)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
-        return self._interpolate_mouth_lms(mouth_lms)
+        mouth_lms, oov_frames = self._interpolate_mouth_lms(mouth_lms)
+        return forced_aligner_data, mouth_lms, oov_frames
