@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 
 from config import *
+from google.cloud import error_reporting
 from joblib import Parallel, delayed
 from mouth_landmarks_generator import MouthLandmarksGenerator
 
@@ -35,21 +36,26 @@ def save_story(data):
 
 
 if __name__ == '__main__':
-	story = load_story()
-	text = story['text']
+	error_client = error_reporting.Client()
+	try:
+		story = load_story()
+		text = story['text']
 
-	print('Computing mouth landmarks from audio and text')
-	forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
+		print('Computing mouth landmarks from audio and text')
+		forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator().generate(AUDIO_FILE_PATH, text)
 
-	print('Saving out-of-vocabulary frames')
-	story['forcedAligner'] = forced_aligner_data
-	story['outOfVocabularyFrames'] = oov_frames
-	save_story(story)
+		print('Saving out-of-vocabulary frames')
+		story['forcedAligner'] = forced_aligner_data
+		story['outOfVocabularyFrames'] = oov_frames
+		save_story(story)
 
-	print('Generating images from mouth landmarks')
-	num = len(mouth_lms)
+		print('Generating images from mouth landmarks')
+		num = len(mouth_lms)
 
-	Parallel(n_jobs=NUM_JOBS)(
-		delayed(landmarks_to_image)(num, i, lm)
-		for i, lm in enumerate(mouth_lms)
-	)
+		Parallel(n_jobs=NUM_JOBS)(
+			delayed(landmarks_to_image)(num, i, lm)
+			for i, lm in enumerate(mouth_lms)
+		)
+	except Exception:
+		error_client.report_exception()
+		raise
