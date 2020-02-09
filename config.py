@@ -7,6 +7,8 @@ END_MOUTH_DURATION = 0.4
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
 FPS = float(os.environ.get('FPS'))
 IMG_FMT = os.environ.get('IMG_FMT')
+INIT_MAX_OFFSET = 0.3
+INIT_MIN_OFFSET = 0.1
 MAX_OFFSET_END = 0.2
 MIN_OFFSET_END = 0.1
 MIN_TIME_BETWEEN_LMS = 0.05 # in seconds
