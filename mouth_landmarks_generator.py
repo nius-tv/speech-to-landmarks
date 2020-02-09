@@ -55,15 +55,33 @@ class MouthLandmarksGenerator(object):
     def _check_mouth_lms(self, mouth_lms):
         num = len(mouth_lms)
 
+        # Fixes issue with Gentle's output
         for i, mouth_lm in enumerate(mouth_lms):
             if i + 1 == num:
                 break
-            # Fixes issue with Gentle's output
             if i > 0 and old_mouth['end'] > mouth_lm['start']:
                 old_mouth['end'] = mouth_lm['start']
             old_mouth = mouth_lm
 
-        return mouth_lms
+        # Skip landmarks
+        new_mouth_lms = []
+        tmp_mouth_lms = None
+        for i, mouth_lm in enumerate(mouth_lms):
+            if tmp_mouth_lms is not None:
+                mouth_lm['start'] = tmp_mouth_lms['start']
+                tmp_mouth_lms = None
+
+            if i + 1 == len(mouth_lms):
+                new_mouth_lms.append(mouth_lm)
+                continue
+
+            if mouth_lm['end'] - mouth_lm['start'] < MIN_TIME_BETWEEN_LMS:
+                tmp_mouth_lms = mouth_lm
+                continue
+
+            new_mouth_lms.append(mouth_lm)
+
+        return new_mouth_lms
 
     def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
@@ -141,8 +159,6 @@ class MouthLandmarksGenerator(object):
                                   ipa_code, next_ipa_code):
         for i in range(start_frame, end_frame):
             percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
-            if percentage < MIN_PERCENTAGE:
-                percentage /= PERCENTAGE_CLIP
 
             mouth_points = []
             for a in range(self.num_mouth_points):
