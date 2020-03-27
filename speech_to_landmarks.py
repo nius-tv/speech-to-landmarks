@@ -12,7 +12,7 @@ def landmarks_to_image(num, i, landmarks):
 	output_file_path = '{}/{:010d}.{}'.format(MOUTH_LMS_IMAGES_DIR_PATH, i + 1, IMG_FMT)
 	print(i + 1, '/', num, output_file_path)
 
-	shape = (ORIGINAL_VIDEO_RESOLUTION[1], ORIGINAL_VIDEO_RESOLUTION[0]) # columns, rows
+	shape = (SCALED_VIDEO_RESOLUTION[1], SCALED_VIDEO_RESOLUTION[0]) # columns, rows
 	image = np.zeros(shape, np.uint8)
 
 	color = (255, 255, 255) # white
