@@ -11,8 +11,8 @@ class MouthLandmarksGenerator(object):
     NOT_FOUND_IN_AUDIO = 'not-found-in-audio'
     OUT_OF_VOCABULARY = 'OOV'
 
-    def __init__(self):
-        self.mouth_lms_points = self._get_mouth_lms_points()
+    def __init__(self, story):
+        self.mouth_lms_points = self._get_mouth_lms_points(story)
         # All mouth landmarks have the same number of points.
         # Here we can use the default ipa code to obtain the number of mouth points.
         self.num_mouth_points = len(self.mouth_lms_points[DEFAULT_MOUTH_IPA_CODE])
@@ -139,8 +139,9 @@ class MouthLandmarksGenerator(object):
         res = requests.post(FORCED_ALIGNER_URL, files=files)
         return res.json()
 
-    def _get_mouth_lms_points(self):
-        with open(MOUTH_LMS_FILE_PATH) as f:
+    def _get_mouth_lms_points(self, story):
+        filepath = MOUTH_LMS_FILE_PATH.format(story['model'])
+        with open(filepath) as f:
             data = f.read()
         return json.loads(data)
 
