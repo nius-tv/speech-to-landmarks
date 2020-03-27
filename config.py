@@ -16,7 +16,6 @@ MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks/{}.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
 MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'
 NUM_JOBS = 5
-ORIGINAL_VIDEO_RESOLUTION = (1080, 1920) # width, height
 SCALED_VIDEO_RESOLUTION = (512, 1024) # width, height
 SILENT_IPA_CODE = 'P'
 STORY_FILE_PATH = '/data/story.yaml'
