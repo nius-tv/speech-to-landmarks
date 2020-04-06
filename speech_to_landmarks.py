@@ -40,9 +40,10 @@ if __name__ == '__main__':
 	try:
 		story = load_story()
 		text = story['text']
+		model_name = story['model']
 
 		print('Computing mouth landmarks from audio and text')
-		forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator(story).generate(AUDIO_FILE_PATH, text)
+		forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator(model_name).generate(AUDIO_FILE_PATH, text)
 
 		print('Saving out-of-vocabulary frames')
 		story['forcedAligner'] = forced_aligner_data
