@@ -103,9 +103,11 @@ class MouthLandmarksGenerator(object):
                 mouth_start = mouth_end
                 not_found = True
                 continue
+
             elif word['case'] == self.NOT_FOUND_IN_AUDIO and not_found:
                 print('not-found-in-audio:', word['word'])
                 continue
+
             elif not_found:
                 mouth_lms.append({
                     'ipa_code': self.NOT_FOUND_IN_AUDIO,
@@ -140,8 +142,8 @@ class MouthLandmarksGenerator(object):
         return res.json()
 
     def _get_mouth_lms_points(self, story):
-        filepath = MOUTH_LMS_FILE_PATH.format(story['model'])
-        with open(filepath) as f:
+        file_path = MOUTH_LMS_FILE_PATH.format(story['model'])
+        with open(file_path) as f:
             data = f.read()
         return json.loads(data)
 
