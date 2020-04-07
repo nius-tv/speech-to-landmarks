@@ -6,17 +6,26 @@ RUN apt-get install -y ffmpeg
 RUN apt-get install -y libsm6 # required by opencv
 RUN apt-get install -y libxext6 # required by opencv
 RUN apt-get install -y libxrender-dev # required by opencv
+RUN apt-get install -y locales # required by mocha
 RUN apt-get install -y python3.5
 RUN apt-get install -y python3-pip
 
 RUN pip3 install google-cloud-error-reporting==0.33.0
 RUN pip3 install joblib==0.14.0
+RUN pip3 install mock==4.0.2
 RUN pip3 install opencv-python==3.4.0.12
+RUN pip3 install pytest==3.2.1
+RUN pip3 install pytest-mocha==0.1.0
 RUN pip3 install pyyaml==5.1.2
 RUN pip3 install requests==2.22.0
 RUN pip3 install scipy==1.3.1
+RUN pip3 install watchdog==0.8.3
 
-ADD . /app
+# Setup unicode support (required by mocha)
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Install gcsfuse
 RUN apt-get install -y curl
@@ -42,3 +51,5 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
 
 RUN apt-get update -y
 RUN apt-get install -y google-cloud-sdk
+
+ADD . /app
