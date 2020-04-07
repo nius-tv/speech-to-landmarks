@@ -152,14 +152,15 @@ class MouthLandmarksGenerator(object):
         num = len(mouth_lms)
 
         for i, mouth_lm in enumerate(mouth_lms):
-            ipa_code = mouth_lm['ipa_code']
-            # Select next mouth landmarks
             if i + 1 == num:
                 break
-            next_ipa_code = mouth_lms[i + 1]['ipa_code']
-            # Calculate interpolated mouth points
+
             start_frame = math.floor(mouth_lm['start'] * config.FPS)
             end_frame = math.floor(mouth_lm['end'] * config.FPS)
+
+            ipa_code = mouth_lm['ipa_code']
+            next_ipa_code = mouth_lms[i + 1]['ipa_code']
+
             int_mouth_lms, oov_frames = self._interpolate_mouth_points(int_mouth_lms, oov_frames,
                                                                        start_frame, end_frame,
                                                                        ipa_code, next_ipa_code)
