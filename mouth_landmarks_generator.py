@@ -1,9 +1,8 @@
+import config
 import json
 import math
 import random
 import requests
-
-from config import *
 
 
 class MouthLandmarksGenerator(object):
@@ -15,7 +14,7 @@ class MouthLandmarksGenerator(object):
         self.mouth_lms_points = self._get_mouth_lms_points(model_name)
         # All mouth landmarks have the same number of points.
         # Here we can use the default ipa code to obtain the number of mouth points.
-        self.num_mouth_points = len(self.mouth_lms_points[DEFAULT_MOUTH_IPA_CODE])
+        self.num_mouth_points = len(self.mouth_lms_points[config.DEFAULT_MOUTH_IPA_CODE])
 
     def _adjust_lms(self, mouth_lms):
         old_mouth = None
@@ -30,13 +29,13 @@ class MouthLandmarksGenerator(object):
                     init_start = 0
 
                 new_mouth_lms.append({
-                    'ipa_code': SILENT_IPA_CODE,
+                    'ipa_code': config.SILENT_IPA_CODE,
                     'start': 0,
                     'end': init_start
                 })
                 new_mouth_lms.append({
-                    'ipa_code': SILENT_IPA_CODE,
                     'start': init_start,
+                    'ipa_code': config.SILENT_IPA_CODE,
                     'end': mouth_start
                 })
             if i != 0 and mouth_start - old_mouth['end'] > 0:
@@ -46,17 +45,17 @@ class MouthLandmarksGenerator(object):
             old_mouth = mouth_lm
 
         # Delay last mouth landmark
-        mouth_lm['end'] += END_MOUTH_DURATION
+        mouth_lm['end'] += config.END_MOUTH_DURATION
 
         # Add ending mouth position
-        offset = random.uniform(MIN_OFFSET_END, MAX_OFFSET_END)
+        offset = random.uniform(config.MIN_OFFSET_END, config.MAX_OFFSET_END)
         new_mouth_lms.append({
-            'ipa_code': SILENT_IPA_CODE,
+            'ipa_code': config.SILENT_IPA_CODE,
             'start': mouth_lm['end'],
             'end': mouth_lm['end'] + offset
         })
         new_mouth_lms.append({
-            'ipa_code': SILENT_IPA_CODE
+            'ipa_code': config.SILENT_IPA_CODE
         })
 
         return new_mouth_lms
@@ -159,8 +158,8 @@ class MouthLandmarksGenerator(object):
                 break
             next_ipa_code = mouth_lms[i + 1]['ipa_code']
             # Calculate interpolated mouth points
-            start_frame = math.floor(mouth_lm['start'] * FPS)
-            end_frame = math.floor(mouth_lm['end'] * FPS)
+            start_frame = math.floor(mouth_lm['start'] * config.FPS)
+            end_frame = math.floor(mouth_lm['end'] * config.FPS)
             int_mouth_lms, oov_frames = self._interpolate_mouth_points(int_mouth_lms, oov_frames,
                                                                        start_frame, end_frame,
                                                                        ipa_code, next_ipa_code)
@@ -201,22 +200,19 @@ class MouthLandmarksGenerator(object):
 
             int_mouth_lms.insert(i, {
                 'ipa_code': ipa_code,
-                'next_ipa_code': next_ipa_code,
                 'mouth_points': mouth_points
             })
 
         return int_mouth_lms, oov_frames
 
     def _save_text(self, text):
-        with open(TEXT_FILE_PATH, 'w') as f:
+        with open(config.TEXT_FILE_PATH, 'w') as f:
             f.write(text)
 
     def generate(self, audio_file_path, text):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
-                                                           TEXT_FILE_PATH)
-        print('forced aligner data:\n', json.dumps(forced_aligner_data, indent=True))
-
+                                                           config.TEXT_FILE_PATH)
         mouth_lms = self._compute_mouth_lms(forced_aligner_data)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
