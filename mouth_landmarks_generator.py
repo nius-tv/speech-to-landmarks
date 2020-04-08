@@ -170,7 +170,7 @@ class MouthLandmarksGenerator(object):
     def _interpolate_mouth_points(self, int_mouth_lms, oov_frames, start_frame, end_frame,
                                   ipa_code, next_ipa_code):
         for i in range(start_frame, end_frame):
-            percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
+            percentage = float(i - start_frame) / float(end_frame - start_frame - 1)
 
             mouth_points = []
             for a in range(self.num_mouth_points):
