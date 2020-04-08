@@ -22,7 +22,7 @@ class MouthLandmarksGenerator(object):
 
         for i, mouth_lm in enumerate(mouth_lms):
             mouth_start = mouth_lm['start']
-            # Checks if there is a "gap"/"silence" between mouths landmarks.
+            # Checks if there is a "gap"/"silence" between initial mouths landmarks
             if i == 0 and mouth_start > 0:
                 init_start = mouth_start - random.uniform(INIT_MIN_OFFSET, INIT_MAX_OFFSET)
                 if init_start < 0:
@@ -175,23 +175,14 @@ class MouthLandmarksGenerator(object):
             mouth_points = []
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
-                if ipa_code not in self.mouth_lms_points \
-                    and not ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    print('ipa_code:', ipa_code)
-                    raise
-                elif ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    ipa_code = DEFAULT_MOUTH_IPA_CODE
+                if ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
+                    ipa_code = config.DEFAULT_MOUTH_IPA_CODE
                     oov_frames[start_frame] = end_frame
 
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
-                if next_ipa_code not in self.mouth_lms_points \
-                    and not next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    print('next_ipa_code:', next_ipa_code)
-                    raise
-                elif next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    next_ipa_code = DEFAULT_MOUTH_IPA_CODE
-                    oov_frames[start_frame] = end_frame
+                if next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
+                    next_ipa_code = config.DEFAULT_MOUTH_IPA_CODE
 
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
