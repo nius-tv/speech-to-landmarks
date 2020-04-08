@@ -1,11 +1,23 @@
 import cv2
 import numpy as np
+import subprocess
 import yaml
 
 from config import *
 from google.cloud import error_reporting
 from joblib import Parallel, delayed
 from mouth_landmarks_generator import MouthLandmarksGenerator
+
+
+def get_duration(input_file_path):
+	cmd = 'ffprobe \
+		-loglevel quiet \
+		-show_entries format=duration \
+		-of default=noprint_wrappers=1:nokey=1 \
+		{}'.format(input_file_path)
+	data = subprocess.check_output(['bash', '-c', cmd])
+	data = data.decode('utf-8').strip() # binary to utf-8 string, removes \n
+	return float(data)
 
 
 def landmarks_to_image(num, i, landmarks):
@@ -40,11 +52,14 @@ if __name__ == '__main__':
 	try:
 		FPS = float(FPS)
 		story = load_story()
-		text = story['text']
 		model_name = story['model']
+		text = story['text']
+		duration = get_duration(AUDIO_FILE_PATH)
 
 		print('Computing mouth landmarks from audio and text')
-		forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator(model_name).generate(AUDIO_FILE_PATH, text)
+		forced_aligner_data, mouth_lms, oov_frames = MouthLandmarksGenerator(model_name).generate(AUDIO_FILE_PATH,
+																								  text,
+																								  duration)
 
 		print('Saving out-of-vocabulary frames')
 		story['forcedAligner'] = forced_aligner_data
