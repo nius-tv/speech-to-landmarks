@@ -308,6 +308,20 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 2.0)
+	def test_multiple_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			{'ipa_code': 'AA', 'mouth_points': [(62.0, 581.0)]},
+			{'ipa_code': 'AA', 'mouth_points': [(61.666666666666664, 580.0)]},
+			{'ipa_code': 'AA', 'mouth_points': [(61.333333333333336, 579.0)]},
+			{'ipa_code': 'AA', 'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(62.0, 581.0)]},
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
 	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS

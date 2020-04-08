@@ -72,7 +72,7 @@ class MouthLandmarksGenerator(object):
 
         return mouth_lms
 
-    def _compute_mouth_lms(self, forced_aligner_data):
+    def _compute_mouth_lms(self, forced_aligner_data, duration):
         mouth_lms = []
         mouth_end = 0
         not_found = False
@@ -110,6 +110,13 @@ class MouthLandmarksGenerator(object):
                     'end': mouth_end
                 })
                 mouth_start = mouth_end
+
+        if not_found:
+            mouth_lms.append({
+                'ipa_code': self.NOT_FOUND_IN_AUDIO,
+                'start': mouth_start,
+                'end': duration
+            })
 
         return mouth_lms
 
@@ -182,11 +189,11 @@ class MouthLandmarksGenerator(object):
         with open(config.TEXT_FILE_PATH, 'w') as f:
             f.write(text)
 
-    def generate(self, audio_file_path, text):
+    def generate(self, audio_file_path, text, duration):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            config.TEXT_FILE_PATH)
-        mouth_lms = self._compute_mouth_lms(forced_aligner_data)
+        mouth_lms = self._compute_mouth_lms(forced_aligner_data, duration)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
         mouth_lms, oov_frames = self._interpolate_mouth_lms(mouth_lms)
