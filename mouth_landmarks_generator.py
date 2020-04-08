@@ -70,25 +70,7 @@ class MouthLandmarksGenerator(object):
                 old_mouth['end'] = mouth_lm['start']
             old_mouth = mouth_lm
 
-        # Skip landmarks
-        new_mouth_lms = []
-        tmp_mouth_lms = None
-        for i, mouth_lm in enumerate(mouth_lms):
-            if tmp_mouth_lms is not None:
-                mouth_lm['start'] = tmp_mouth_lms['start']
-                tmp_mouth_lms = None
-
-            if i + 1 == len(mouth_lms):
-                new_mouth_lms.append(mouth_lm)
-                continue
-
-            if mouth_lm['end'] - mouth_lm['start'] < MIN_TIME_BETWEEN_LMS:
-                tmp_mouth_lms = mouth_lm
-                continue
-
-            new_mouth_lms.append(mouth_lm)
-
-        return new_mouth_lms
+        return mouth_lms
 
     def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
