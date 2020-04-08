@@ -3,15 +3,13 @@ import os
 AUDIO_FMT = os.environ.get('AUDIO_FMT')
 AUDIO_FILE_PATH = '/data/audio.{}'.format(AUDIO_FMT)
 DEFAULT_MOUTH_IPA_CODE = 'AA'
-END_MOUTH_DURATION = 0.4
+END_MOUTH_DURATION = 0.3 # in seconds
 FORCED_ALIGNER_URL = 'http://gentle:80/transcriptions?async=false'
-FPS = float(os.environ.get('FPS'))
+FPS = os.environ.get('FPS')
 IMG_FMT = os.environ.get('IMG_FMT')
-INIT_MAX_OFFSET = 0.3
-INIT_MIN_OFFSET = 0.1
-MAX_OFFSET_END = 0.2
-MIN_OFFSET_END = 0.1
-MIN_TIME_BETWEEN_LMS = 0.05 # in seconds
+MAX_OFFSET_END = 0.2 # in seconds
+MIN_OFFSET_END = 0.1 # in seconds
+MIN_TIME_BETWEEN_LMS = 0.3 # in seconds
 MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks/{}.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
 MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'
