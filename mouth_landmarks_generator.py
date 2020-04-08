@@ -11,6 +11,7 @@ class MouthLandmarksGenerator(object):
     OUT_OF_VOCABULARY = 'OOV'
 
     def __init__(self, model_name):
+        self.FPS = float(config.FPS)
         self.mouth_lms_points = self._get_mouth_lms_points(model_name)
         # All mouth landmarks have the same number of points.
         # Here we can use the default ipa code to obtain the number of mouth points.
@@ -143,8 +144,8 @@ class MouthLandmarksGenerator(object):
             if i + 1 == num:
                 break
 
-            start_frame = math.floor(mouth_lm['start'] * config.FPS)
-            end_frame = math.floor(mouth_lm['end'] * config.FPS)
+            start_frame = math.floor(mouth_lm['start'] * self.FPS)
+            end_frame = math.floor(mouth_lm['end'] * self.FPS)
 
             ipa_code = mouth_lm['ipa_code']
             next_ipa_code = mouth_lms[i + 1]['ipa_code']

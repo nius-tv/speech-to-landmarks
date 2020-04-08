@@ -50,7 +50,6 @@ def save_story(data):
 if __name__ == '__main__':
 	error_client = error_reporting.Client()
 	try:
-		FPS = float(FPS)
 		story = load_story()
 		model_name = story['model']
 		text = story['text']
