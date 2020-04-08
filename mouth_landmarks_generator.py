@@ -24,21 +24,20 @@ class MouthLandmarksGenerator(object):
             mouth_start = mouth_lm['start']
             # Checks if there is a "gap"/"silence" between initial mouths landmarks
             if i == 0 and mouth_start > 0:
-                init_start = mouth_start - random.uniform(INIT_MIN_OFFSET, INIT_MAX_OFFSET)
-                if init_start < 0:
-                    init_start = 0
-
                 new_mouth_lms.append({
                     'ipa_code': config.SILENT_IPA_CODE,
                     'start': 0,
-                    'end': init_start
-                })
-                new_mouth_lms.append({
-                    'start': init_start,
-                    'ipa_code': config.SILENT_IPA_CODE,
                     'end': mouth_start
                 })
-            if i != 0 and mouth_start - old_mouth['end'] > 0:
+            # Checks if there is a big "gap"/"silence" between mouths landmarks
+            if i != 0 and mouth_start - old_mouth['end'] > config.MIN_TIME_BETWEEN_LMS:
+                new_mouth_lms.append({
+                    'ipa_code': config.SILENT_IPA_CODE,
+                    'start': old_mouth['end'],
+                    'end': mouth_start
+                })
+            # Checks if there is a small "gap"/"silence" between mouths landmarks
+            elif i != 0 and mouth_start - old_mouth['end'] > 0:
                 old_mouth['end'] = mouth_start
 
             new_mouth_lms.append(mouth_lm)
