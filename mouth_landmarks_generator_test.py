@@ -23,53 +23,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
-	@patch('config.FPS', 1.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
-	@patch('config.REST_IPA_CODE', 'P')
-	def test_start_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
-		mock_get_mouth_lms.return_value = self.MOUTH_LMS
-		mock_execute_fa.return_value = {
-			'words': [
-				{
-					'case': 'success',
-					'end': 6.0,
-					'phones': [
-						{
-							'duration': 2.0,
-							'phone': 'hh_B'
-						},
-						{
-							'duration': 2.0,
-							'phone': 'ay_E'
-						}
-					],
-					'start': 2.0,
-					'word': 'Hi'
-				}
-			]
-		}
-		mock_uniform.return_value = 2.0
-
-		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
-
-		assert mouth_lms == [
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(52.0, 581.0)]},
-			{'ipa_code': 'HH', 'mouth_points': [(52.0, 581.0)]},
-			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
-			{'ipa_code': 'AY', 'mouth_points': [(60.0, 580.0)]},
-			{'ipa_code': 'AY', 'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
-		]
-		assert oov_frames == {}
-
-	@patch('random.uniform')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
@@ -132,95 +85,11 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
-	@patch('config.FPS', 2.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
-	@patch('config.MIN_TIME_BETWEEN_LMS', 2)
-	@patch('config.REST_IPA_CODE', 'P')
-	def test_small_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
-		mock_get_mouth_lms.return_value = self.MOUTH_LMS
-		mock_execute_fa.return_value = {
-			'words': [
-				{
-					'case': 'success',
-					'end': 1.0,
-					'phones': [
-						{
-							'duration': 1.0,
-							'phone': 'm_B'
-						}
-					],
-					'start': 0.0,
-					'word': 'Hey'
-				},
-				{
-					'case': 'success',
-					'end': 4.0,
-					'phones': [
-						{
-							'duration': 1.0,
-							'phone': 'iy_I'
-						},
-						{
-							'duration': 1.0,
-							'phone': 'd_E'
-						}
-					],
-					'start': 2.0,
-					'word': 'you'
-				},
-				{
-					'case': 'success',
-					'end': 8.0,
-					'phones': [
-						{
-							'duration': 1.0,
-							'phone': 'er_B'
-						}
-					],
-					'start': 7.0,
-					'word': 'there'
-				}
-			]
-		}
-		mock_uniform.return_value = 2.0
-
-		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
-
-		assert mouth_lms == [
-			{'ipa_code': 'M',  'mouth_points': [(63.0, 586.0)]},
-			{'ipa_code': 'M',  'mouth_points': [(62.333333333333336, 583.3333333333334)]},
-			{'ipa_code': 'M',  'mouth_points': [(61.666666666666664, 580.6666666666666)]},
-			{'ipa_code': 'M',  'mouth_points': [(61.0, 578.0)]},
-			{'ipa_code': 'IY', 'mouth_points': [(61.0, 578.0)]},
-			{'ipa_code': 'IY', 'mouth_points': [(59.0, 584.0)]},
-			{'ipa_code': 'D',  'mouth_points': [(59.0, 584.0)]},
-			{'ipa_code': 'D',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(60.8, 583.2)]},
-			{'ipa_code': 'P',  'mouth_points': [(60.6, 582.4)]},
-			{'ipa_code': 'P',  'mouth_points': [(60.4, 581.6)]},
-			{'ipa_code': 'P',  'mouth_points': [(60.2, 580.8)]},
-			{'ipa_code': 'P',  'mouth_points': [(60.0, 580.0)]},
-			{'ipa_code': 'ER', 'mouth_points': [(60.0, 580.0)]},
-			{'ipa_code': 'ER', 'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
-		]
-		assert oov_frames == {}
-
-	@patch('random.uniform')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
-	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
-	@patch('config.FPS', 2.0)
+	@patch('config.FPS', 1.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
-	def test_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
 			'words': [
@@ -230,39 +99,43 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 				},
 				{
 					'case': 'success',
-					'end': 4.0,
+					'end': 5.0,
 					'phones': [
 						{
 							'duration': 2.0,
 							'phone': 'ao_I'
 						},
 					],
-					'start': 2.0,
+					'start': 3.0,
+					'word': 'there'
+				},
+				{
+					'case': 'not-found-in-audio',
 					'word': 'you'
 				}
 			]
 		}
-		mock_uniform.return_value = 2.0
+		mock_uniform.return_value = 3.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 8)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 581.0)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.6666666666666)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.3333333333334)]},
+			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.5)]},
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.0)]},
 			{'ipa_code': 'AO', 'mouth_points': [(62.0, 580.0)]},
-			{'ipa_code': 'AO', 'mouth_points': [(61.666666666666664, 581.3333333333334)]},
-			{'ipa_code': 'AO', 'mouth_points': [(61.333333333333336, 582.6666666666666)]},
-			{'ipa_code': 'AO', 'mouth_points': [(61.0, 584.0)]},
-			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(62.0, 581.0)]},
+			{'ipa_code': 'AA', 'mouth_points': [(62.0, 581.0)]},
+			{'ipa_code': 'AA', 'mouth_points': [(61.5, 582.5)]},
+			{'ipa_code': 'AA', 'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
 		assert oov_frames == {
-			0: 4
+			0: 3,
+			5: 8
 		}
 
 	@patch('random.uniform')
@@ -400,11 +273,11 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
-	@patch('config.FPS', 1.0)
+	@patch('config.FPS', 2.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
-	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+	def test_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
 			'words': [
@@ -414,43 +287,39 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 				},
 				{
 					'case': 'success',
-					'end': 5.0,
+					'end': 4.0,
 					'phones': [
 						{
 							'duration': 2.0,
 							'phone': 'ao_I'
 						},
 					],
-					'start': 3.0,
-					'word': 'there'
-				},
-				{
-					'case': 'not-found-in-audio',
+					'start': 2.0,
 					'word': 'you'
 				}
 			]
 		}
-		mock_uniform.return_value = 3.0
+		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 8)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 581.0)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.5)]},
+			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.6666666666666)]},
+			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.3333333333334)]},
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.0)]},
 			{'ipa_code': 'AO', 'mouth_points': [(62.0, 580.0)]},
-			{'ipa_code': 'AO', 'mouth_points': [(62.0, 581.0)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 581.0)]},
-			{'ipa_code': 'AA', 'mouth_points': [(61.5, 582.5)]},
-			{'ipa_code': 'AA', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.666666666666664, 581.3333333333334)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.333333333333336, 582.6666666666666)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
 		assert oov_frames == {
-			0: 3,
-			5: 8
+			0: 4
 		}
 
 	@patch('random.uniform')
@@ -573,5 +442,136 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			{'ipa_code': 'P',  'mouth_points': [(200.0, 200.0)]}, 
 			{'ipa_code': 'P',  'mouth_points': [(200.0, 200.0)]}, 
 			{'ipa_code': 'P',  'mouth_points': [(200.0, 200.0)]}
+		]
+		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 2.0)
+	@patch('config.MIN_PERCENTAGE', 0)
+	@patch('config.PERCENTAGE_CLIP', 0)
+	@patch('config.MIN_TIME_BETWEEN_LMS', 2)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_small_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'case': 'success',
+					'end': 1.0,
+					'phones': [
+						{
+							'duration': 1.0,
+							'phone': 'm_B'
+						}
+					],
+					'start': 0.0,
+					'word': 'Hey'
+				},
+				{
+					'case': 'success',
+					'end': 4.0,
+					'phones': [
+						{
+							'duration': 1.0,
+							'phone': 'iy_I'
+						},
+						{
+							'duration': 1.0,
+							'phone': 'd_E'
+						}
+					],
+					'start': 2.0,
+					'word': 'you'
+				},
+				{
+					'case': 'success',
+					'end': 8.0,
+					'phones': [
+						{
+							'duration': 1.0,
+							'phone': 'er_B'
+						}
+					],
+					'start': 7.0,
+					'word': 'there'
+				}
+			]
+		}
+		mock_uniform.return_value = 2.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+
+		assert mouth_lms == [
+			{'ipa_code': 'M',  'mouth_points': [(63.0, 586.0)]},
+			{'ipa_code': 'M',  'mouth_points': [(62.333333333333336, 583.3333333333334)]},
+			{'ipa_code': 'M',  'mouth_points': [(61.666666666666664, 580.6666666666666)]},
+			{'ipa_code': 'M',  'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(59.0, 584.0)]},
+			{'ipa_code': 'D',  'mouth_points': [(59.0, 584.0)]},
+			{'ipa_code': 'D',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.8, 583.2)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.6, 582.4)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.4, 581.6)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.2, 580.8)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'ER', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'ER', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 1.0)
+	@patch('config.MIN_PERCENTAGE', 0)
+	@patch('config.PERCENTAGE_CLIP', 0)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_start_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'case': 'success',
+					'end': 6.0,
+					'phones': [
+						{
+							'duration': 2.0,
+							'phone': 'hh_B'
+						},
+						{
+							'duration': 2.0,
+							'phone': 'ay_E'
+						}
+					],
+					'start': 2.0,
+					'word': 'Hi'
+				}
+			]
+		}
+		mock_uniform.return_value = 2.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+
+		assert mouth_lms == [
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(52.0, 581.0)]},
+			{'ipa_code': 'HH', 'mouth_points': [(52.0, 581.0)]},
+			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
 		assert oov_frames == {}
