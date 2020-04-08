@@ -14,7 +14,7 @@ class MouthLandmarksGenerator(object):
         self.mouth_lms_points = self._get_mouth_lms_points(model_name)
         # All mouth landmarks have the same number of points.
         # Here we can use the default ipa code to obtain the number of mouth points.
-        self.num_mouth_points = len(self.mouth_lms_points[config.DEFAULT_MOUTH_IPA_CODE])
+        self.num_mouth_points = len(self.mouth_lms_points[config.NOT_FOUND_IPA_CODE])
 
     def _adjust_lms(self, mouth_lms):
         old_mouth = None
@@ -32,7 +32,7 @@ class MouthLandmarksGenerator(object):
             # Checks if there is a big "gap"/"silence" between mouths landmarks
             if i != 0 and mouth_start - old_mouth['end'] > config.MIN_TIME_BETWEEN_LMS:
                 new_mouth_lms.append({
-                    'ipa_code': config.SILENT_IPA_CODE,
+                    'ipa_code': config.REST_IPA_CODE,
                     'start': old_mouth['end'],
                     'end': mouth_start
                 })
@@ -164,13 +164,13 @@ class MouthLandmarksGenerator(object):
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
                 if ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    ipa_code = config.DEFAULT_MOUTH_IPA_CODE
+                    ipa_code = config.NOT_FOUND_IPA_CODE
                     oov_frames[start_frame] = end_frame
 
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
                 if next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
-                    next_ipa_code = config.DEFAULT_MOUTH_IPA_CODE
+                    next_ipa_code = config.NOT_FOUND_IPA_CODE
 
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
