@@ -31,7 +31,7 @@ def landmarks_to_image(num, i, landmarks):
 	for x, y in landmarks['mouth_points']:
 		# 3 = radius
 		# -1 = thinkness, when value is set to -1, the circle will be filled with color
-		cv2.circle(image, (int(x), int(y)), 3, color, -1)
+		cv2.circle(image, (round(x), round(y)), 3, color, -1)
 
 	assert cv2.imwrite(output_file_path, image)
 
