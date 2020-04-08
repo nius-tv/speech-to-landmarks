@@ -126,11 +126,11 @@ class MouthLandmarksGenerator(object):
             'audio': open(audio_file_path, 'rb'),
             'transcript': open(text_file_path, 'rb')
         }
-        res = requests.post(FORCED_ALIGNER_URL, files=files)
+        res = requests.post(config.FORCED_ALIGNER_URL, files=files)
         return res.json()
 
     def _get_mouth_lms_points(self, model_name):
-        file_path = MOUTH_LMS_FILE_PATH.format(model_name)
+        file_path = config.MOUTH_LMS_FILE_PATH.format(model_name)
         with open(file_path) as f:
             data = f.read()
         return json.loads(data)
