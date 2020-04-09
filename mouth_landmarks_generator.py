@@ -28,6 +28,11 @@ class MouthLandmarksGenerator(object):
                 new_mouth_lms.append({
                     'ipa_code': config.SILENT_IPA_CODE,
                     'start': 0,
+                    'end': mouth_start - config.INIT_MOUTH_DURATION
+                })
+                new_mouth_lms.append({
+                    'ipa_code': config.SILENT_IPA_CODE,
+                    'start': mouth_start - config.INIT_MOUTH_DURATION,
                     'end': mouth_start
                 })
             # Checks if there is a big "gap"/"silence" between mouths landmarks

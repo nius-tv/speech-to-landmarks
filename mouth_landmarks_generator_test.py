@@ -537,13 +537,14 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
+	@patch('config.INIT_MOUTH_DURATION', 3)
 	def test_start_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
 			'words': [
 				{
 					'case': 'success',
-					'end': 6.0,
+					'end': 9.0,
 					'phones': [
 						{
 							'duration': 2.0,
@@ -554,7 +555,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 							'phone': 'ay_E'
 						}
 					],
-					'start': 2.0,
+					'start': 5.0,
 					'word': 'Hi'
 				}
 			]
@@ -566,6 +567,9 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 
 		assert mouth_lms == [
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(56.5, 582.5)]},
 			{'ipa_code': 'P',  'mouth_points': [(52.0, 581.0)]},
 			{'ipa_code': 'HH', 'mouth_points': [(52.0, 581.0)]},
 			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
