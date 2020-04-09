@@ -26,7 +26,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('config.FPS', 2.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
-	@patch('config.MIN_TIME_BETWEEN_LMS', 0.5)
+	@patch('config.MAX_DURATION_BETWEEN_LMS', 0.5)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_big_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
@@ -452,7 +452,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('config.FPS', 2.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
-	@patch('config.MIN_TIME_BETWEEN_LMS', 2)
+	@patch('config.MAX_DURATION_BETWEEN_LMS', 2)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_small_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
