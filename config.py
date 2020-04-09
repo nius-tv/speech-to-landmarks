@@ -11,6 +11,7 @@ MAX_DURATION_BETWEEN_LMS = 0.3 # in seconds
 MAX_OFFSET_END = 0.7 # in seconds
 MIN_OFFSET_END = 0.3 # in seconds
 MIN_PERCENTAGE = 0.4
+MIN_PHONE_DURATION = 0.03 # in seconds
 MOUTH_LMS_FILE_PATH = '/models/mouth-landmarks/{}.json'
 MOUTH_LMS_INFERENCE_DIR_PATH = '/data/inference'
 MOUTH_LMS_IMAGES_DIR_PATH = '/data/landmarks'

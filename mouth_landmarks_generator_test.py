@@ -449,6 +449,53 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 1.0)
+	@patch('config.MIN_PERCENTAGE', 0)
+	@patch('config.PERCENTAGE_CLIP', 0)
+	@patch('config.MIN_PHONE_DURATION', 2)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_skip_landmarks(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'case': 'success',
+					'end': 2.0,
+					'phones': [
+						{
+							'duration': 2.0,
+							'phone': 'ay_B'
+						},
+						{
+							'duration': 1.0,
+							'phone': 'hh_B'
+						}
+					],
+					'start': 2.0,
+					'word': 'Hi'
+				}
+			]
+		}
+		mock_uniform.return_value = 2.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+
+		assert mouth_lms == [
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
@@ -536,8 +583,8 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('config.FPS', 1.0)
 	@patch('config.MIN_PERCENTAGE', 0)
 	@patch('config.PERCENTAGE_CLIP', 0)
-	@patch('config.REST_IPA_CODE', 'P')
 	@patch('config.INIT_MOUTH_DURATION', 3)
+	@patch('config.REST_IPA_CODE', 'P')
 	def test_start_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
