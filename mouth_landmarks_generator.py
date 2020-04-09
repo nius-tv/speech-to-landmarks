@@ -109,13 +109,11 @@ class MouthLandmarksGenerator(object):
 
         for word in forced_aligner_data['words']:
             if word['case'] == self.NOT_FOUND_IN_AUDIO and not not_found:
-                print('not-found-in-audio:', word['word'])
                 mouth_start = mouth_end
                 not_found = True
                 continue
 
             elif word['case'] == self.NOT_FOUND_IN_AUDIO and not_found:
-                print('not-found-in-audio:', word['word'])
                 continue
 
             elif not_found:
