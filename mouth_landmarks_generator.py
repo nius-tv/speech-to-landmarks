@@ -37,9 +37,15 @@ class MouthLandmarksGenerator(object):
                 })
             # Checks if there is a big "gap"/"silence" between mouths landmarks
             if i != 0 and mouth_start - old_mouth['end'] > config.MAX_DURATION_BETWEEN_LMS:
+                offset = (mouth_start - old_mouth['end']) / 2
                 new_mouth_lms.append({
                     'ipa_code': config.REST_IPA_CODE,
                     'start': old_mouth['end'],
+                    'end': mouth_start - offset
+                })
+                new_mouth_lms.append({
+                    'ipa_code': config.REST_IPA_CODE,
+                    'start': mouth_start - offset,
                     'end': mouth_start
                 })
             # Checks if there is a small "gap"/"silence" between mouths landmarks
