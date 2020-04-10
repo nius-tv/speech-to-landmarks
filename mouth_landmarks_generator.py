@@ -163,7 +163,6 @@ class MouthLandmarksGenerator(object):
         return json.loads(data)
 
     def _interpolate_mouth_lms(self, mouth_lms):
-        tmp_start = None
         int_mouth_lms = []
         oov_frames = {}
         num = len(mouth_lms)
@@ -172,16 +171,8 @@ class MouthLandmarksGenerator(object):
             if i + 1 == num:
                 break
 
-            if not tmp_start:
-                start_frame = round(mouth_lm['start'] * self.FPS)
-            else:
-                start_frame = tmp_start
+            start_frame = round(mouth_lm['start'] * self.FPS)
             end_frame = round(mouth_lm['end'] * self.FPS)
-
-            if end_frame - start_frame <= 1:
-                tmp_start = start_frame
-                continue
-            tmp_start = None
 
             ipa_code = mouth_lm['ipa_code']
             next_ipa_code = mouth_lms[i + 1]['ipa_code']
@@ -195,7 +186,7 @@ class MouthLandmarksGenerator(object):
     def _interpolate_mouth_points(self, int_mouth_lms, oov_frames, start_frame, end_frame,
                                   ipa_code, next_ipa_code):
         for i in range(start_frame, end_frame):
-            percentage = float(i - start_frame) / float(end_frame - start_frame - 1)
+            percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
 
             if percentage < config.MIN_PERCENTAGE:
                 percentage /= config.PERCENTAGE_CLIP
