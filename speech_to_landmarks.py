@@ -66,6 +66,7 @@ if __name__ == '__main__':
 																								  duration)
 
 		print('Saving out-of-vocabulary frames')
+		story['duration'] = duration
 		story['forcedAligner'] = forced_aligner_data
 		story['outOfVocabularyFrames'] = oov_frames
 		save_story(story)
