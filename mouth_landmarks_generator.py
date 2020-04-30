@@ -161,7 +161,7 @@ class MouthLandmarksGenerator(object):
             data = f.read()
         return json.loads(data)
 
-    def _interpolate_mouth_lms(self, mouth_lms):
+    def _interpolate_mouth_lms(self, mouth_lms, min_percentage, percentage_clip):
         int_mouth_lms = []
         oov_frames = {}
         num = len(mouth_lms)
@@ -178,17 +178,18 @@ class MouthLandmarksGenerator(object):
 
             int_mouth_lms, oov_frames = self._interpolate_mouth_points(int_mouth_lms, oov_frames,
                                                                        start_frame, end_frame,
-                                                                       ipa_code, next_ipa_code)
+                                                                       ipa_code, next_ipa_code,
+                                                                       min_percentage, percentage_clip)
 
         return int_mouth_lms, oov_frames
 
     def _interpolate_mouth_points(self, int_mouth_lms, oov_frames, start_frame, end_frame,
-                                  ipa_code, next_ipa_code):
+                                  ipa_code, next_ipa_code, min_percentage, percentage_clip):
         for i in range(start_frame, end_frame):
             percentage = float(i - start_frame + 1) / float(end_frame - start_frame)
 
-            if percentage < config.MIN_PERCENTAGE:
-                percentage /= config.PERCENTAGE_CLIP
+            if percentage < min_percentage:
+                percentage /= percentage_clip
 
             mouth_points = []
             for a in range(self.num_mouth_points):
@@ -219,12 +220,14 @@ class MouthLandmarksGenerator(object):
         with open(config.TEXT_FILE_PATH, 'w') as f:
             f.write(text)
 
-    def generate(self, audio_file_path, text, duration):
+    def generate(self, audio_file_path, text, duration, min_percentage, percentage_clip):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            config.TEXT_FILE_PATH)
         mouth_lms = self._compute_mouth_lms(forced_aligner_data, duration)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
-        mouth_lms, oov_frames = self._interpolate_mouth_lms(mouth_lms)
+        mouth_lms, oov_frames = self._interpolate_mouth_lms(mouth_lms,
+                                                            min_percentage,
+                                                            percentage_clip)
         return forced_aligner_data, mouth_lms, oov_frames
