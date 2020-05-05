@@ -220,7 +220,8 @@ class MouthLandmarksGenerator(object):
         with open(config.TEXT_FILE_PATH, 'w') as f:
             f.write(text)
 
-    def generate(self, audio_file_path, text, duration, min_percentage, percentage_clip):
+    def generate(self, audio_file_path, text, init_duration, duration,
+                 min_percentage, percentage_clip):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            config.TEXT_FILE_PATH)
