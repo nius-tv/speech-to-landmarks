@@ -365,6 +365,55 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 2.0)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_not_found_in_audio_checked(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'case': 'not-found-in-audio',
+					'word': 'Hi'
+				},
+				{
+					'case': 'success',
+					'end': 4.0,
+					'phones': [
+						{
+							'duration': 2.0,
+							'phone': 'ao_I'
+						},
+					],
+					'start': 2.0,
+					'word': 'you'
+				}
+			]
+		}
+		mock_uniform.return_value = 2.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 1, None, 0, 0)
+
+		assert mouth_lms == [
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(62.0, 580.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.75, 581.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.5, 582.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.25, 583.0)]},
+			{'ipa_code': 'AO', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 10.0)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_percentage(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):

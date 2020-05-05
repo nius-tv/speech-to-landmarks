@@ -3,6 +3,8 @@ import json
 import random
 import requests
 
+from g2p_en import G2p
+
 
 class MouthLandmarksGenerator(object):
 

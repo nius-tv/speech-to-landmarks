@@ -10,6 +10,7 @@ RUN apt-get install -y locales # required by mocha
 RUN apt-get install -y python3.5
 RUN apt-get install -y python3-pip
 
+RUN pip3 install g2p-en==2.1.0
 RUN pip3 install google-cloud-error-reporting==0.33.0
 RUN pip3 install joblib==0.14.0
 RUN pip3 install mock==4.0.2
