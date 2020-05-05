@@ -16,6 +16,7 @@ RUN pip3 install mock==4.0.2
 RUN pip3 install opencv-python==3.4.0.12
 RUN pip3 install pytest==3.2.1
 RUN pip3 install pytest-mocha==0.1.0
+RUN pip3 install pytest-only==1.2.2
 RUN pip3 install pyyaml==5.1.2
 RUN pip3 install requests==2.22.0
 RUN pip3 install scipy==1.3.1
