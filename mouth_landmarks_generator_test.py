@@ -24,8 +24,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.MAX_DURATION_BETWEEN_LMS', 0.5)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_big_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
@@ -65,7 +63,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 1.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'HH', 'mouth_points': [(56.0, 580.5)]},
@@ -86,8 +84,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.INIT_MOUTH_DURATION', 3)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_init_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
@@ -115,7 +111,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
@@ -137,8 +133,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
@@ -169,7 +163,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 3.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 8)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, 8, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.6666666666666)]},
@@ -194,8 +188,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_multiple_ini_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
@@ -226,7 +218,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.8333333333334)]},
@@ -249,8 +241,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_multiple_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
@@ -297,7 +287,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 1.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(61.75, 580.25)]},
@@ -325,8 +315,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
@@ -353,7 +341,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.75)]},
@@ -412,11 +400,9 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			]
 		}
 		mock_uniform.return_value = 1.0
-		config.MIN_PERCENTAGE = 0
-		config.PERCENTAGE_CLIP = 0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(10.0, 10.0)]},
@@ -455,10 +441,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		assert oov_frames == {}
 
 		# Test MIN_PERCENTAGE and 
-		config.MIN_PERCENTAGE = 0.75
-		config.PERCENTAGE_CLIP = 5
-
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0.75, 5)
 
 		assert mouth_lms == [
 			{'ipa_code': 'AA', 'mouth_points': [(2.0, 2.0)]},
@@ -501,8 +484,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.MIN_PHONE_DURATION', 2)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_skip_landmarks(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
@@ -530,7 +511,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'P',  'mouth_points': [(60.5, 582.0)]},
@@ -548,8 +529,6 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 2.0)
-	@patch('config.MIN_PERCENTAGE', 0)
-	@patch('config.PERCENTAGE_CLIP', 0)
 	@patch('config.MAX_DURATION_BETWEEN_LMS', 2)
 	@patch('config.REST_IPA_CODE', 'P')
 	def test_small_inbetween_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
@@ -601,7 +580,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, None)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
 
 		assert mouth_lms == [
 			{'ipa_code': 'M',  'mouth_points': [(62.5, 584.0)]},
