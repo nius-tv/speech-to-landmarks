@@ -268,15 +268,19 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'no'
 				},
 				{
+					'case': 'not-found-in-audio',
+					'word': 'maybe'
+				},
+				{
 					'case': 'success',
-					'end': 6.0,
+					'end': 7.0,
 					'phones': [
 						{
 							'duration': 1.0,
 							'phone': 'uw_I'
 						},
 					],
-					'start': 5.0,
+					'start': 6.0,
 					'word': 'maybe'
 				}
 			]
@@ -296,7 +300,9 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			{'ipa_code': 'Y',  'mouth_points': [(57.0, 583.0)]},
 			{'ipa_code': 'S',  'mouth_points': [(61.0, 583.0)]},
 			{'ipa_code': 'N',  'mouth_points': [(60.0, 588.0)]},
-			{'ipa_code': 'OW', 'mouth_points': [(60.0, 579.0)]},
+			{'ipa_code': 'OW', 'mouth_points': [(63.0, 586.0)]},
+			{'ipa_code': 'EY', 'mouth_points': [(63.0, 590.0)]},
+			{'ipa_code': 'B',  'mouth_points': [(61.0, 578.0)]},
 			{'ipa_code': 'UW', 'mouth_points': [(60.5, 581.5)]},
 			{'ipa_code': 'UW', 'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
