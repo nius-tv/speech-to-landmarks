@@ -140,7 +140,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('config.FPS', 1.0)
 	@patch('config.INIT_MOUTH_DURATION', 3)
 	@patch('config.REST_IPA_CODE', 'P')
-	def test_init_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+	def test_ini_gap(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
 			'words': [
