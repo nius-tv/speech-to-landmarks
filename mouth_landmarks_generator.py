@@ -106,25 +106,8 @@ class MouthLandmarksGenerator(object):
     def _compute_mouth_lms(self, forced_aligner_data, duration):
         mouth_lms = []
         mouth_end = 0
-        not_found = False
 
         for word in forced_aligner_data['words']:
-            if word['case'] == self.NOT_FOUND_IN_AUDIO and not not_found:
-                mouth_start = mouth_end
-                not_found = True
-                continue
-
-            elif word['case'] == self.NOT_FOUND_IN_AUDIO and not_found:
-                continue
-
-            elif not_found:
-                mouth_lms.append({
-                    'ipa_code': self.NOT_FOUND_IN_AUDIO,
-                    'start': mouth_start,
-                    'end': word['start']
-                })
-                not_found = False
-
             mouth_start = word['start']
             mouth_end = mouth_start
             for phone in word['phones']:
@@ -139,13 +122,6 @@ class MouthLandmarksGenerator(object):
                     'end': mouth_end
                 })
                 mouth_start = mouth_end
-
-        if not_found:
-            mouth_lms.append({
-                'ipa_code': self.NOT_FOUND_IN_AUDIO,
-                'start': mouth_start,
-                'end': duration
-            })
 
         return mouth_lms
 
