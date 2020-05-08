@@ -335,13 +335,13 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_uniform.return_value = 2.0
 
 		from mouth_landmarks_generator import MouthLandmarksGenerator
-		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 1, None, 0, 0)
 
 		assert mouth_lms == [
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.75)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.5)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.25)]},
-			{'ipa_code': 'AA', 'mouth_points': [(62.0, 580.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(62.0, 580.0)]},
 			{'ipa_code': 'AO', 'mouth_points': [(61.75, 581.0)]},
 			{'ipa_code': 'AO', 'mouth_points': [(61.5, 582.0)]},
 			{'ipa_code': 'AO', 'mouth_points': [(61.25, 583.0)]},
@@ -351,9 +351,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
-		assert oov_frames == {
-			0: 4
-		}
+		assert oov_frames == {}
 
 	@patch('random.uniform')
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
