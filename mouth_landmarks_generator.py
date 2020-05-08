@@ -8,6 +8,8 @@ from g2p_en import G2p
 
 class MouthLandmarksGenerator(object):
 
+    CASE_G2P = 'inferred-g2p'
+    G2P = G2p()
     NOT_FOUND_IN_AUDIO = 'not-found-in-audio'
     OUT_OF_VOCABULARY = 'OOV'
 
@@ -71,6 +73,65 @@ class MouthLandmarksGenerator(object):
         })
 
         return new_mouth_lms
+
+    def _check_forced_aligner(self, forced_aligner_data, init_duration, duration):
+        forced_aligner_data = self._check_forced_aligner_timing(forced_aligner_data, init_duration,
+                                                                duration)
+        return self._check_forced_aligner_g2p(forced_aligner_data)
+
+    def _check_forced_aligner_g2p(self, forced_aligner_data):
+        for token in forced_aligner_data['words']:
+            if token['case'] == self.NOT_FOUND_IN_AUDIO:
+                token['case'] = self.CASE_G2P
+
+                duration = token['end'] - token['start']
+                word = token['word']
+                phones = self.G2P(word)
+                num_phones = len(phones)
+
+                token['phones'] = []
+                for phone in phones:
+                    # Remove numbers from phone, for example 'AY1' to 'AY'
+                    phone = ''.join(p for p in phone if not p.isdigit())
+                    token['phones'].append({
+                        'duration': duration / num_phones,
+                        'phone': phone
+                    })
+
+        return forced_aligner_data
+
+    def _check_forced_aligner_timing(self, forced_aligner_data, init_duration, duration):
+        tmp_time = None
+        tokens = forced_aligner_data['words']
+        num_tokens = len(tokens)
+
+            if token['case'] == self.NOT_FOUND_IN_AUDIO:
+                if i == 0:
+                    tmp_time = init_duration
+                    continue
+
+                elif tmp_time is None:
+                    tmp_time = prev_token['end']
+                    continue
+
+                else:
+                    found_idx = None
+                    for a in range(i + 1, num_tokens):
+                        next_token = tokens[a]
+                        if 'start' in next_token:
+                            found_idx = a
+                            break
+
+                    for a in range(i - 1, found_idx):
+                        tokens[a]['start'] = tmp_time
+                        tokens[a]['end'] = tmp_time + duration
+                        tmp_time = tokens[a]['end']
+
+                    tmp_time = None
+                    continue
+
+
+        return forced_aligner_data
 
     def _check_mouth_lms(self, mouth_lms):
         num = len(mouth_lms)
@@ -172,13 +233,13 @@ class MouthLandmarksGenerator(object):
             mouth_points = []
             for a in range(self.num_mouth_points):
                 # Check if ipa code exists
-                if ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
+                if ipa_code in [self.OUT_OF_VOCABULARY]:
                     ipa_code = config.NOT_FOUND_IPA_CODE
                     oov_frames[start_frame] = end_frame
 
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
                 # Check if ipa code exists
-                if next_ipa_code in [self.NOT_FOUND_IN_AUDIO, self.OUT_OF_VOCABULARY]:
+                if next_ipa_code in [self.OUT_OF_VOCABULARY]:
                     next_ipa_code = config.NOT_FOUND_IPA_CODE
 
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
@@ -203,6 +264,7 @@ class MouthLandmarksGenerator(object):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            config.TEXT_FILE_PATH)
+        forced_aligner_data = self._check_forced_aligner(forced_aligner_data, init_duration, duration)
         mouth_lms = self._compute_mouth_lms(forced_aligner_data, duration)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
