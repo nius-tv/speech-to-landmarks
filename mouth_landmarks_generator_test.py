@@ -136,7 +136,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
 	@patch('config.REST_IPA_CODE', 'P')
-	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+	def test_ini_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
 			'words': [
