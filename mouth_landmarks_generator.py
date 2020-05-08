@@ -81,9 +81,7 @@ class MouthLandmarksGenerator(object):
 
     def _check_forced_aligner_g2p(self, forced_aligner_data):
         for token in forced_aligner_data['words']:
-            if token['case'] == self.NOT_FOUND_IN_AUDIO:
-                token['case'] = self.CASE_G2P
-
+            if token['case'] == self.CASE_G2P:
                 duration = token['end'] - token['start']
                 word = token['word']
                 phones = self.G2P(word)
@@ -123,6 +121,7 @@ class MouthLandmarksGenerator(object):
                             break
 
                     for a in range(i - 1, found_idx):
+                        tokens[a]['case'] = self.CASE_G2P
                         tokens[a]['start'] = tmp_time
                         tokens[a]['end'] = tmp_time + duration
                         tmp_time = tokens[a]['end']
@@ -130,6 +129,11 @@ class MouthLandmarksGenerator(object):
                     tmp_time = None
                     continue
 
+            elif tmp_time is not None:
+                prev_token['case'] = self.CASE_G2P
+                prev_token['end'] = token['start']
+                prev_token['start'] = tmp_time
+                tmp_time = None
 
         return forced_aligner_data
 
