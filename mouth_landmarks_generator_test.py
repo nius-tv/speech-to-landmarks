@@ -102,7 +102,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 2.0,
 							'phone': 'ao_I'
-						},
+						}
 					],
 					'start': 3.0,
 					'word': 'there'
@@ -207,7 +207,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 2.0,
 							'phone': 'ao_I'
-						},
+						}
 					],
 					'start': 6.0,
 					'word': 'there'
@@ -254,7 +254,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 1.0,
 							'phone': 'iy_I'
-						},
+						}
 					],
 					'start': 2.0,
 					'word': 'there'
@@ -278,7 +278,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 1.0,
 							'phone': 'uw_I'
-						},
+						}
 					],
 					'start': 6.0,
 					'word': 'maybe'
@@ -331,7 +331,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 2.0,
 							'phone': 'ao_I'
-						},
+						}
 					],
 					'start': 2.0,
 					'word': 'you'
@@ -380,7 +380,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 1.0,
 							'phone': 'aa_i'
-						},
+						}
 					],
 					'start': 0.0,
 				},
@@ -391,7 +391,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 						{
 							'duration': 1.0,
 							'phone': 'ae_i'
-						},
+						}
 					],
 					'start': 1.0,
 				}
