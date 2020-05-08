@@ -103,9 +103,36 @@ class MouthLandmarksGenerator(object):
         tokens = forced_aligner_data['words']
         num_tokens = len(tokens)
 
+        for i, token in enumerate(tokens):
+            prev_token = tokens[i - 1]
             if token['case'] == self.NOT_FOUND_IN_AUDIO:
                 if i == 0:
                     tmp_time = init_duration
+                    continue
+
+                elif i + 1 == num_tokens:
+                    token['case'] = self.CASE_G2P
+                    token['end'] = duration
+
+                    if tmp_time is None:
+                        token['start'] = prev_token['end']
+                    else:
+                        found_idx = None
+                        for a in reversed(range(i)):
+                            prev_token = tokens[a]
+                            if 'end' in prev_token:
+                                found_idx = a
+                                break
+
+                        t_duration = (duration - tmp_time) / (i - found_idx)
+                        for a in range(found_idx + 1, i + 1):
+                            tokens[a]['case'] = self.CASE_G2P
+                            tokens[a]['start'] = tmp_time
+                            tokens[a]['end'] = tmp_time + t_duration
+                            tmp_time = tokens[a]['end']
+
+                        tmp_time = None
+
                     continue
 
                 elif tmp_time is None:
@@ -120,10 +147,11 @@ class MouthLandmarksGenerator(object):
                             found_idx = a
                             break
 
+                    t_duration = (tokens[found_idx]['start'] - tmp_time) / (found_idx - i + 1)
                     for a in range(i - 1, found_idx):
                         tokens[a]['case'] = self.CASE_G2P
                         tokens[a]['start'] = tmp_time
-                        tokens[a]['end'] = tmp_time + duration
+                        tokens[a]['end'] = tmp_time + t_duration
                         tmp_time = tokens[a]['end']
 
                     tmp_time = None

@@ -188,6 +188,57 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
 	@patch('config.FPS', 1.0)
 	@patch('config.REST_IPA_CODE', 'P')
+	def test_multiple_end_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'case': 'success',
+					'end': 4.0,
+					'phones': [
+						{
+							'duration': 2.0,
+							'phone': 'HH_i'
+						}
+					],
+					'start': 2.0,
+					'word': 'Hi'
+				},
+				{
+					'case': 'not-found-in-audio',
+					'word': 'there'
+				},
+				{
+					'case': 'not-found-in-audio',
+					'word': 'you'
+				}
+			]
+		}
+		mock_uniform.return_value = 2.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, 8, 0, 0)
+
+		assert mouth_lms == [
+			{"ipa_code": 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'HH', 'mouth_points': [(54.0, 583.5)]},
+			{'ipa_code': 'HH', 'mouth_points': [(56.0, 586.0)]},
+			{'ipa_code': 'DH', 'mouth_points': [(57.0, 583.0)]},
+			{'ipa_code': 'R',  'mouth_points': [(57.0, 586.0)]},
+			{'ipa_code': 'Y',  'mouth_points': [(60.0, 579.0)]},
+			{'ipa_code': 'UW', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 1.0)
+	@patch('config.REST_IPA_CODE', 'P')
 	def test_multiple_ini_not_found_in_audio(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
 		mock_get_mouth_lms.return_value = self.MOUTH_LMS
 		mock_execute_fa.return_value = {
