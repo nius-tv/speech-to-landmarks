@@ -53,6 +53,7 @@ if __name__ == '__main__':
 		story = load_story()
 		model_name = story['model']
 		text = story['text']
+		init_duration = story['initDuration']
 		min_percentage = story['landmarks']['minPercentage']
 		percentage_clip = story['landmarks']['percentageClip']
 		duration = get_duration(AUDIO_FILE_PATH)
