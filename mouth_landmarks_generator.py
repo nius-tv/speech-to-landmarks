@@ -11,7 +11,7 @@ class MouthLandmarksGenerator(object):
     CASE_G2P = 'inferred-g2p'
     G2P = G2p()
     NOT_FOUND_IN_AUDIO = 'not-found-in-audio'
-    OUT_OF_VOCABULARY = 'OOV'
+    OUT_OF_VOCABULARY = '<unk>'
 
     def __init__(self, model_name):
         self.FPS = float(config.FPS)
@@ -105,7 +105,8 @@ class MouthLandmarksGenerator(object):
 
         for i, token in enumerate(tokens):
             prev_token = tokens[i - 1]
-            if token['case'] == self.NOT_FOUND_IN_AUDIO:
+            if token['case'] == self.NOT_FOUND_IN_AUDIO \
+                or token['alignedWord'] == self.OUT_OF_VOCABULARY:
                 if i == 0:
                     tmp_time = init_duration
                     continue
@@ -264,16 +265,7 @@ class MouthLandmarksGenerator(object):
 
             mouth_points = []
             for a in range(self.num_mouth_points):
-                # Check if ipa code exists
-                if ipa_code in [self.OUT_OF_VOCABULARY]:
-                    ipa_code = config.NOT_FOUND_IPA_CODE
-                    oov_frames[start_frame] = end_frame
-
                 x, y = self.mouth_lms_points.get(ipa_code)[a]
-                # Check if ipa code exists
-                if next_ipa_code in [self.OUT_OF_VOCABULARY]:
-                    next_ipa_code = config.NOT_FOUND_IPA_CODE
-
                 target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
                 # Calculate interpolated points
                 int_x = x + ((target_x - x) * percentage)

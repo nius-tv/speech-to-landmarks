@@ -33,6 +33,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'success',
 					'end': 2.0,
 					'phones': [
@@ -49,6 +50,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'E',
 					'case': 'success',
 					'end': 4.0,
 					'phones': [
@@ -92,10 +94,12 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'not-found-in-audio',
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'there',
 					'case': 'success',
 					'end': 5.0,
 					'phones': [
@@ -108,6 +112,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'there'
 				},
 				{
+					'alignedWord': 'you',
 					'case': 'not-found-in-audio',
 					'word': 'you'
 				}
@@ -145,6 +150,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'success',
 					'end': 9.0,
 					'phones': [
@@ -193,6 +199,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'success',
 					'end': 4.0,
 					'phones': [
@@ -205,10 +212,12 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'there',
 					'case': 'not-found-in-audio',
 					'word': 'there'
 				},
 				{
+					'alignedWord': 'you',
 					'case': 'not-found-in-audio',
 					'word': 'you'
 				}
@@ -244,14 +253,17 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'not-found-in-audio',
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'you',
 					'case': 'not-found-in-audio',
 					'word': 'you'
 				},
 				{
+					'alignedWord': 'there',
 					'case': 'success',
 					'end': 8.0,
 					'phones': [
@@ -295,10 +307,12 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'not-found-in-audio',
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'there',
 					'case': 'success',
 					'end': 3.0,
 					'phones': [
@@ -311,18 +325,22 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'there'
 				},
 				{
+					'alignedWord': 'yes',
 					'case': 'not-found-in-audio',
 					'word': 'yes'
 				},
 				{
+					'alignedWord': 'no',
 					'case': 'not-found-in-audio',
 					'word': 'no'
 				},
 				{
+					'alignedWord': 'maybe',
 					'case': 'not-found-in-audio',
 					'word': 'maybe'
 				},
 				{
+					'alignedWord': 'maybe',
 					'case': 'success',
 					'end': 7.0,
 					'phones': [
@@ -372,10 +390,12 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'not-found-in-audio',
 					'word': 'Hi'
 				},
 				{
+					'alignedWord': 'you',
 					'case': 'success',
 					'end': 4.0,
 					'phones': [
@@ -425,6 +445,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': '',
 					'case': 'success',
 					'end': 1.0,
 					'phones': [
@@ -436,6 +457,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'start': 0.0,
 				},
 				{
+					'alignedWord': '',
 					'case': 'success',
 					'end': 2.0,
 					'phones': [
@@ -540,6 +562,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hi',
 					'case': 'success',
 					'end': 2.0,
 					'phones': [
@@ -585,6 +608,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 		mock_execute_fa.return_value = {
 			'words': [
 				{
+					'alignedWord': 'Hey',
 					'case': 'success',
 					'end': 1.0,
 					'phones': [
@@ -597,6 +621,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'Hey'
 				},
 				{
+					'alignedWord': 'you',
 					'case': 'success',
 					'end': 4.0,
 					'phones': [
@@ -613,6 +638,7 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 					'word': 'you'
 				},
 				{
+					'alignedWord': 'there',
 					'case': 'success',
 					'end': 8.0,
 					'phones': [
