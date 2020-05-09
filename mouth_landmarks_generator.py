@@ -11,7 +11,7 @@ class MouthLandmarksGenerator(object):
     CASE_G2P = 'inferred-g2p'
     G2P = G2p()
     NOT_FOUND_IN_AUDIO = 'not-found-in-audio'
-    OUT_OF_VOCABULARY = '<unk>'
+    UNKNOWN = '<unk>'
 
     def __init__(self, model_name):
         self.FPS = float(config.FPS)
@@ -106,7 +106,7 @@ class MouthLandmarksGenerator(object):
         for i, token in enumerate(tokens):
             prev_token = tokens[i - 1]
             if token['case'] == self.NOT_FOUND_IN_AUDIO \
-                or token['alignedWord'] == self.OUT_OF_VOCABULARY:
+                or token['alignedWord'] == self.UNKNOWN:
                 if i == 0:
                     tmp_time = init_duration
                     continue
