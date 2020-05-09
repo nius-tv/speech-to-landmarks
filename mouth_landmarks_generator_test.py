@@ -680,3 +680,86 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
 		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 2.0)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_unknown(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'alignedWord': '<unk>',
+					'case': 'success',
+					'word': 'Hi'
+				},
+				{
+					'alignedWord': 'there',
+					'case': 'success',
+					'end': 3.0,
+					'phones': [
+						{
+							'duration': 1.0,
+							'phone': 'iy_I'
+						}
+					],
+					'start': 2.0,
+					'word': 'there'
+				},
+				{
+					'alignedWord': '<unk>',
+					'case': 'success',
+					'word': 'yes'
+				},
+				{
+					'alignedWord': '<unk>',
+					'case': 'success',
+					'word': 'no'
+				},
+				{
+					'alignedWord': 'maybe',
+					'case': 'not-found-in-audio',
+					'word': 'maybe'
+				},
+				{
+					'alignedWord': 'maybe',
+					'case': 'success',
+					'end': 7.0,
+					'phones': [
+						{
+							'duration': 1.0,
+							'phone': 'uw_I'
+						}
+					],
+					'start': 6.0,
+					'word': 'maybe'
+				}
+			]
+		}
+		mock_uniform.return_value = 1.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
+
+		assert mouth_lms == [
+			{'ipa_code': 'HH', 'mouth_points': [(56.0, 580.5)]},
+			{'ipa_code': 'HH', 'mouth_points': [(60.0, 580.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(60.5, 579.0)]},
+			{'ipa_code': 'AY', 'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(59.0, 582.0)]},
+			{'ipa_code': 'IY', 'mouth_points': [(57.0, 586.0)]},
+			{'ipa_code': 'Y',  'mouth_points': [(57.0, 583.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(61.0, 583.0)]},
+			{'ipa_code': 'N',  'mouth_points': [(60.0, 588.0)]},
+			{'ipa_code': 'OW', 'mouth_points': [(63.0, 586.0)]},
+			{'ipa_code': 'EY', 'mouth_points': [(63.0, 590.0)]},
+			{'ipa_code': 'B',  'mouth_points': [(61.0, 578.0)]},
+			{'ipa_code': 'UW', 'mouth_points': [(60.5, 581.5)]},
+			{'ipa_code': 'UW', 'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
