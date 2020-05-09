@@ -23,6 +23,8 @@ RUN pip3 install requests==2.22.0
 RUN pip3 install scipy==1.3.1
 RUN pip3 install watchdog==0.8.3
 
+RUN python3 -m nltk.downloader punkt
+
 # Setup unicode support (required by mocha)
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
