@@ -23,6 +23,8 @@ RUN pip3 install requests==2.22.0
 RUN pip3 install scipy==1.3.1
 RUN pip3 install watchdog==0.8.3
 
+RUN python3 -m nltk.downloader averaged_perceptron_tagger
+RUN python3 -m nltk.downloader cmudict
 RUN python3 -m nltk.downloader punkt
 
 # Setup unicode support (required by mocha)
