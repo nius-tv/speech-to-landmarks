@@ -172,9 +172,9 @@ class MouthLandmarksGenerator(object):
         for i, mouth_lm in enumerate(mouth_lms):
             if i + 1 == num:
                 break
-            if i > 0 and old_mouth['end'] > mouth_lm['start']:
-                old_mouth['end'] = mouth_lm['start']
-            old_mouth = mouth_lm
+            if i > 0 and prev_mouth['end'] > mouth_lm['start']:
+                prev_mouth['end'] = mouth_lm['start']
+            prev_mouth = mouth_lm
 
         # Skip landmarks
         new_mouth_lms = []
