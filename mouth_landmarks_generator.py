@@ -21,7 +21,7 @@ class MouthLandmarksGenerator(object):
         self.num_mouth_points = len(self.mouth_lms_points[config.NOT_FOUND_IPA_CODE])
 
     def _adjust_lms(self, mouth_lms):
-        old_mouth = None
+        prev_mouth = None
         new_mouth_lms = []
 
         for i, mouth_lm in enumerate(mouth_lms):
@@ -39,11 +39,11 @@ class MouthLandmarksGenerator(object):
                     'end': mouth_start
                 })
             # Checks if there is a big "gap"/"silence" between mouths landmarks
-            if i != 0 and mouth_start - old_mouth['end'] > config.MAX_DURATION_BETWEEN_LMS:
-                offset = (mouth_start - old_mouth['end']) / 2
+            elif i != 0 and mouth_start - prev_mouth['end'] > config.MAX_DURATION_BETWEEN_LMS:
+                offset = (mouth_start - prev_mouth['end']) / 2
                 new_mouth_lms.append({
                     'ipa_code': config.REST_IPA_CODE,
-                    'start': old_mouth['end'],
+                    'start': prev_mouth['end'],
                     'end': mouth_start - offset
                 })
                 new_mouth_lms.append({
@@ -52,11 +52,11 @@ class MouthLandmarksGenerator(object):
                     'end': mouth_start
                 })
             # Checks if there is a small "gap"/"silence" between mouths landmarks
-            elif i != 0 and mouth_start - old_mouth['end'] > 0:
-                old_mouth['end'] = mouth_start
+            elif i != 0 and mouth_start - prev_mouth['end'] > 0:
+                prev_mouth['end'] = mouth_start
 
             new_mouth_lms.append(mouth_lm)
-            old_mouth = mouth_lm
+            prev_mouth = mouth_lm
 
         # Delay last mouth landmark
         mouth_lm['end'] += config.END_MOUTH_DURATION
