@@ -74,11 +74,6 @@ class MouthLandmarksGenerator(object):
 
         return new_mouth_lms
 
-    def _check_forced_aligner(self, forced_aligner_data, init_duration, duration):
-        forced_aligner_data = self._check_forced_aligner_timing(forced_aligner_data, init_duration,
-                                                                duration)
-        return self._check_forced_aligner_g2p(forced_aligner_data)
-
     def _check_forced_aligner_g2p(self, forced_aligner_data):
         for token in forced_aligner_data['words']:
             if token['case'] == self.CASE_G2P:
@@ -142,7 +137,7 @@ class MouthLandmarksGenerator(object):
 
                 else:
                     found_idx = None
-                    for a in range(i + 1, num_tokens):
+                    for a in range(i + 1, num_tokens + 1):
                         next_token = tokens[a]
                         if 'start' in next_token:
                             found_idx = a
@@ -287,8 +282,11 @@ class MouthLandmarksGenerator(object):
         self._save_text(text)
         forced_aligner_data = self._execute_forced_aligner(audio_file_path,
                                                            config.TEXT_FILE_PATH)
-        forced_aligner_data = self._check_forced_aligner(forced_aligner_data, init_duration, duration)
-        mouth_lms = self._compute_mouth_lms(forced_aligner_data, duration)
+        forced_aligner_data = self._check_forced_aligner_timing(forced_aligner_data,
+                                                                init_duration,
+                                                                duration)
+        forced_aligner_data = self._check_forced_aligner_g2p(forced_aligner_data)
+        mouth_lms = self._compute_mouth_lms(forced_aligner_data)
         mouth_lms = self._adjust_lms(mouth_lms)
         mouth_lms = self._check_mouth_lms(mouth_lms)
         mouth_lms, oov_frames = self._interpolate_mouth_lms(mouth_lms,
