@@ -264,8 +264,8 @@ class MouthLandmarksGenerator(object):
 
             mouth_points = []
             for a in range(self.num_mouth_points):
-                x, y = self.mouth_lms_points.get(ipa_code)[a]
-                target_x, target_y = self.mouth_lms_points.get(next_ipa_code)[a]
+                x, y = self.mouth_lms_points[ipa_code][a]
+                target_x, target_y = self.mouth_lms_points[next_ipa_code][a]
                 # Calculate interpolated points
                 int_x = x + ((target_x - x) * percentage)
                 int_y = y + ((target_y - y) * percentage)
