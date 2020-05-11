@@ -113,10 +113,10 @@ class MouthLandmarksGenerator(object):
 
                 elif i + 1 == num_tokens:
                     token['case'] = self.CASE_G2P
-                    token['end'] = duration
 
                     if tmp_time is None:
                         token['start'] = prev_token['end']
+                        token['end'] = duration
                     else:
                         found_idx = None
                         for a in reversed(range(i)):
