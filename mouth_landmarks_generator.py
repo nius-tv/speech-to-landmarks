@@ -186,7 +186,7 @@ class MouthLandmarksGenerator(object):
 
             if i + 1 == len(mouth_lms):
                 new_mouth_lms.append(mouth_lm)
-                continue
+                break
 
             if mouth_lm['end'] - mouth_lm['start'] < config.MIN_PHONE_DURATION:
                 tmp_mouth_lms = mouth_lm
@@ -196,9 +196,8 @@ class MouthLandmarksGenerator(object):
 
         return new_mouth_lms
 
-    def _compute_mouth_lms(self, forced_aligner_data, duration):
+    def _compute_mouth_lms(self, forced_aligner_data):
         mouth_lms = []
-        mouth_end = 0
 
         for word in forced_aligner_data['words']:
             mouth_start = word['start']
@@ -250,7 +249,8 @@ class MouthLandmarksGenerator(object):
             int_mouth_lms, oov_frames = self._interpolate_mouth_points(int_mouth_lms, oov_frames,
                                                                        start_frame, end_frame,
                                                                        ipa_code, next_ipa_code,
-                                                                       min_percentage, percentage_clip)
+                                                                       min_percentage,
+                                                                       percentage_clip)
 
         return int_mouth_lms, oov_frames
 
