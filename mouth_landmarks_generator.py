@@ -167,9 +167,8 @@ class MouthLandmarksGenerator(object):
         return forced_aligner_data
 
     def _check_mouth_lms(self, mouth_lms):
-        num = len(mouth_lms)
-
         # Fixes issue with Gentle's output
+        num = len(mouth_lms)
         for i, mouth_lm in enumerate(mouth_lms):
             if i + 1 == num:
                 break
