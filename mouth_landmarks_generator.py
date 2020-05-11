@@ -27,7 +27,7 @@ class MouthLandmarksGenerator(object):
         for i, mouth_lm in enumerate(mouth_lms):
             mouth_start = mouth_lm['start']
             # Checks if there is a "gap"/"silence" between initial mouths landmarks
-            if i == 0 and mouth_start > 0:
+            if i == 0 and mouth_start > config.INIT_MOUTH_DURATION:
                 new_mouth_lms.append({
                     'ipa_code': config.SILENT_IPA_CODE,
                     'start': 0,
