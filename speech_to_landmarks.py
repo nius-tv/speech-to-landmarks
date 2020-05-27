@@ -9,6 +9,17 @@ from joblib import Parallel, delayed
 from mouth_landmarks_generator import MouthLandmarksGenerator
 
 
+def flat_list(l):
+	tmp = []
+	for item in l:
+		if isinstance(item, str):
+			tmp.append(item)
+			continue
+		tmp.extend(item)
+
+	return tmp
+
+
 def get_duration(input_file_path):
 	cmd = 'ffprobe \
 		-loglevel quiet \
@@ -52,7 +63,10 @@ if __name__ == '__main__':
 	try:
 		story = load_story()
 		model_name = story['model']
-		text = story['text']
+
+		expanded = story['text']['expanded']
+		text = ' '.join(flat_list(expanded))
+
 		init_duration = story['initDuration']
 		min_percentage = story['landmarks']['minPercentage']
 		percentage_clip = story['landmarks']['percentageClip']
