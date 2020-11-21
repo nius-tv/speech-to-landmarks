@@ -100,6 +100,10 @@ class MouthLandmarksGenerator(object):
 
         for i, token in enumerate(tokens):
             prev_token = tokens[i - 1]
+
+            if token['case'] == self.CASE_G2P:
+                continue
+
             if token['case'] == self.NOT_FOUND_IN_AUDIO \
                 or token['alignedWord'] == self.UNKNOWN:
                 if i == 0:

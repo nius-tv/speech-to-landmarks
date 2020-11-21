@@ -763,3 +763,80 @@ class TestMouthLandmarksGenerator(unittest.TestCase):
 			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
 		]
 		assert oov_frames == {}
+
+	@patch('random.uniform')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._save_text')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._execute_forced_aligner')
+	@patch('mouth_landmarks_generator.MouthLandmarksGenerator._get_mouth_lms_points')
+	@patch('config.FPS', 2.0)
+	@patch('config.REST_IPA_CODE', 'P')
+	def test_unknown_not_found(self, mock_get_mouth_lms, mock_execute_fa, mock_save, mock_uniform):
+		mock_get_mouth_lms.return_value = self.MOUTH_LMS
+		mock_execute_fa.return_value = {
+			'words': [
+				{
+					'alignedWord': '<unk>',
+					'case': 'success',
+					'end': 6,
+					'phones': [
+						{
+							'duration': 1,
+							'phone': 'oov_S'
+						}
+					],
+					'start': 5,
+					'word': 'EsS'
+				},
+				{
+					'case': 'not-found-in-audio',
+					'word': 'EmM'
+				},
+				{
+					'case': 'not-found-in-audio',
+					'word': 'EsS'
+				},
+				{
+					'alignedWord': 'standard',
+					'case': 'success',
+					'end': 10,
+					'phones': [
+						{
+							'duration': 1,
+							'phone': 's_B'
+						}
+					],
+					'start': 9,
+					'word': 'standard'
+				}
+			]
+		}
+		mock_uniform.return_value = 1.0
+
+		from mouth_landmarks_generator import MouthLandmarksGenerator
+		_, mouth_lms, oov_frames = MouthLandmarksGenerator(None).generate(None, None, 0, None, 0, 0)
+
+		assert mouth_lms == [
+			{'ipa_code': 'EH', 'mouth_points': [(56.333333333333336, 580.6666666666666)]},
+			{'ipa_code': 'EH', 'mouth_points': [(55.666666666666664, 578.3333333333334)]},
+			{'ipa_code': 'EH', 'mouth_points': [(55.0, 576.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(55.666666666666664, 578.3333333333334)]},
+			{'ipa_code': 'S',  'mouth_points': [(56.333333333333336, 580.6666666666666)]},
+			{'ipa_code': 'S',  'mouth_points': [(57.0, 583.0)]},
+			{'ipa_code': 'EH', 'mouth_points': [(59.0, 584.0)]},
+			{'ipa_code': 'EH', 'mouth_points': [(61.0, 585.0)]},
+			{'ipa_code': 'EH', 'mouth_points': [(63.0, 586.0)]},
+			{'ipa_code': 'M',  'mouth_points': [(61.0, 585.0)]},
+			{'ipa_code': 'M',  'mouth_points': [(59.0, 584.0)]},
+			{'ipa_code': 'M',  'mouth_points': [(57.0, 583.0)]},
+			{'ipa_code': 'EH', 'mouth_points': [(56.333333333333336, 580.6666666666666)]},
+			{'ipa_code': 'EH', 'mouth_points': [(55.666666666666664, 578.3333333333334)]},
+			{'ipa_code': 'EH', 'mouth_points': [(55.0, 576.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(55.0, 576.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(55.0, 576.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(55.0, 576.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(58.0, 580.0)]},
+			{'ipa_code': 'S',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]},
+			{'ipa_code': 'P',  'mouth_points': [(61.0, 584.0)]}
+		]
+		assert oov_frames == {}
